@@ -29,3 +29,4 @@ export interface CreateVenueDto {
   image?: File;
   cuisine_type?: string;
 }
+

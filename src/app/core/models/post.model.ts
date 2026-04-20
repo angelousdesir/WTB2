@@ -9,8 +9,6 @@ export interface Post {
   category?: string;
   created_at: string;
   updated_at?: string;
-  
-  // Joined data
   user?: {
     username: string;
     avatar_url?: string;

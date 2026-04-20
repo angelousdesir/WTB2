@@ -11,7 +11,14 @@ export interface MenuItem {
   is_available: boolean;
   created_at: string;
   updated_at?: string;
+    // Optional joined data from Supabase queries
+  venue?: {
+    name: string;
+    city?: string;
+    state?: string;
+  };
 }
+
 
 export interface ParsedMenuItem {
   name: string;

@@ -141,17 +141,29 @@ export class MenuParserService {
     return data as MenuItem[];
   }
 
-  /**
-   * Get top rated menu items globally
+ /**
+   * Get top rated menu items globally with venue information
    */
   async getTopMenuItems(limit: number = 5): Promise<MenuItem[]> {
     const { data, error } = await this.supabaseService.client
       .from('menu_items')
-      .select('*, venue:venues(name)')
+      .select(`
+        *,
+        venue:venues(name, city, state)
+      `)
       .order('average_rating', { ascending: false })
       .limit(limit);
 
     if (error) throw error;
-    return data as MenuItem[];
+    
+    // Transform the data to match our MenuItem interface
+    return (data || []).map((item: any) => ({
+      ...item,
+      venue: item.venue ? {
+        name: item.venue.name,
+        city: item.venue.city,
+        state: item.venue.state
+      } : undefined
+    })) as MenuItem[];
   }
 }
