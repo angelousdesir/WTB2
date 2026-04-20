@@ -108,7 +108,7 @@
             <span class="detail-icon">🌐</span>
             <div class="detail-text">
               <strong>Website</strong>
-              <p><a [href]="selectedVenue.website" target="_blank">{{ selectedVenue.website }}</a></p>
+              <p><a [href]="selectedVenue.website" target="_blank" rel="noopener noreferrer">{{ selectedVenue.website }}</a></p>
             </div>
           </div>
           <div class="detail-item" *ngIf="selectedVenue.cuisine_type">

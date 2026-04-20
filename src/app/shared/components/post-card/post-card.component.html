@@ -3,9 +3,9 @@
   <div class="post-header">
     <div class="user-info">
       <div class="user-avatar">
-        <img *ngIf="post.user?.avatar_url" [src]="post.user.avatar_url" alt="User avatar">
+        <img *ngIf="post.user?.avatar_url" [src]="post.user?.avatar_url" alt="User avatar">
         <span *ngIf="!post.user?.avatar_url" class="avatar-placeholder">
-          {{ post.user?.username?.charAt(0).toUpperCase() || 'U' }}
+          <!--{{ post.user?.username?.charAt(0).toUpperCase() || 'U' }}-->
         </span>
       </div>
       <div class="user-details">

@@ -63,7 +63,7 @@
         <select formControlName="menu_item_id" class="form-select">
           <option value="">Select a menu item</option>
           <option *ngFor="let item of menuItems" [value]="item.id">
-            {{ item.name }} - ${{ item.price }}
+           {{ item.name }}<span *ngIf="item.price"> - ${{ item.price.toFixed(2) }}</span>
           </option>
         </select>
       </div>

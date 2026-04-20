@@ -32,7 +32,7 @@
           <div class="user-avatar" (click)="toggleMenu()">
             <img *ngIf="currentUser.avatar_url" [src]="currentUser.avatar_url" alt="Avatar">
             <span *ngIf="!currentUser.avatar_url" class="avatar-placeholder">
-              {{ currentUser.username?.charAt(0).toUpperCase() || 'U' }}
+              <!--{{ currentUser.username?.charAt(0).toUpperCase() || 'U' }}-->
             </span>
           </div>
           
