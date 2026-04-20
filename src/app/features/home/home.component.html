@@ -1,0 +1,124 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Discover & Review
+        <span class="highlight">Amazing Food & Drinks</span>
+      </h1>
+      <p class="hero-subtitle">
+        Share your dining experiences, rate menu items, and help others find the best spots in town.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary" routerLink="/create-post">
+          <span class="icon">✨</span>
+          Create Your First Review
+        </button>
+        <button class="btn-outline" routerLink="/by-bar">
+          <span class="icon">🔍</span>
+          Explore Venues
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <div class="floating-card card-1">
+        <span class="emoji">🍔</span>
+        <span class="text">Burgers</span>
+      </div>
+      <div class="floating-card card-2">
+        <span class="emoji">🍕</span>
+        <span class="text">Pizza</span>
+      </div>
+      <div class="floating-card card-3">
+        <span class="emoji">🍣</span>
+        <span class="text">Sushi</span>
+      </div>
+      <div class="floating-card card-4">
+        <span class="emoji">🍹</span>
+        <span class="text">Cocktails</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <h2 class="section-title">Why Use FoodBar Reviews?</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⭐</div>
+        <h3>Rate Menu Items</h3>
+        <p>Share your honest opinions on specific dishes and drinks, not just restaurants.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📸</div>
+        <h3>Upload Photos</h3>
+        <p>Show off your food photography and help others know what to expect.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏆</div>
+        <h3>Discover Top Items</h3>
+        <p>Find the highest-rated dishes and drinks in your area.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💬</div>
+        <h3>Help Owners</h3>
+        <p>Restaurant owners can see feedback and make improvements based on reviews.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Top Venues Section -->
+  <section class="top-venues-section" *ngIf="topVenues.length > 0">
+    <div class="section-header">
+      <h2 class="section-title">🔥 Top Rated Venues</h2>
+      <button class="btn-link" routerLink="/by-bar">View All</button>
+    </div>
+
+    <div class="venues-grid">
+      <div *ngFor="let venue of topVenues" class="venue-card" (click)="navigateToVenue(venue.id)">
+        <div class="venue-image" [style.background-image]="venue.image_url ? 'url(' + venue.image_url + ')' : 'none'">
+          <div class="venue-rating">
+            <span class="star">⭐</span>
+            <span class="rating-value">{{ venue.average_rating.toFixed(1) }}</span>
+          </div>
+        </div>
+        <div class="venue-info">
+          <h3 class="venue-name">{{ venue.name }}</h3>
+          <p class="venue-location">{{ venue.city }}, {{ venue.state }}</p>
+          <p class="venue-cuisine" *ngIf="venue.cuisine_type">{{ venue.cuisine_type }}</p>
+          <p class="venue-reviews">{{ venue.total_reviews }} reviews</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent Posts Section -->
+  <section class="recent-posts-section" *ngIf="recentPosts.length > 0">
+    <div class="section-header">
+      <h2 class="section-title">📱 Recent Reviews</h2>
+      <button class="btn-link" (click)="navigateToFeed()">See All Posts</button>
+    </div>
+
+    <div class="posts-grid">
+      <app-post-card *ngFor="let post of recentPosts" [post]="post"></app-post-card>
+    </div>
+  </section>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading amazing content...</p>
+  </div>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Ready to Share Your Experience?</h2>
+      <p>Join thousands of food lovers sharing their favorite dishes and drinks.</p>
+      <button class="btn-cta" routerLink="/register">
+        Get Started Free
+      </button>
+    </div>
+  </section>
+</div>

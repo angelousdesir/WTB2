@@ -1,0 +1,60 @@
+<div class="post-card">
+  <!-- Header -->
+  <div class="post-header">
+    <div class="user-info">
+      <div class="user-avatar">
+        <img *ngIf="post.user?.avatar_url" [src]="post.user.avatar_url" alt="User avatar">
+        <span *ngIf="!post.user?.avatar_url" class="avatar-placeholder">
+          {{ post.user?.username?.charAt(0).toUpperCase() || 'U' }}
+        </span>
+      </div>
+      <div class="user-details">
+        <p class="username">{{ post.user?.username || 'Anonymous' }}</p>
+        <p class="post-time">{{ formatDate(post.created_at) }}</p>
+      </div>
+    </div>
+    
+    <button *ngIf="showDelete" class="delete-btn" (click)="onDelete()">
+      <span>🗑️</span>
+    </button>
+  </div>
+
+  <!-- Venue/Menu Item Info -->
+  <div class="post-meta" *ngIf="post.venue || post.menu_item">
+    <span class="meta-tag" *ngIf="post.venue">
+      <span class="icon">📍</span>
+      {{ post.venue.name }}
+    </span>
+    <span class="meta-tag" *ngIf="post.menu_item">
+      <span class="icon">🍽️</span>
+      {{ post.menu_item.name }}
+    </span>
+    <span class="meta-tag" *ngIf="post.category">
+      <span class="icon">🏷️</span>
+      {{ post.category }}
+    </span>
+  </div>
+
+  <!-- Image -->
+  <div class="post-image" *ngIf="post.image_url">
+    <img [src]="post.image_url" [alt]="post.caption">
+  </div>
+
+  <!-- Rating -->
+  <div class="post-rating">
+    <div class="stars">
+      <span 
+        *ngFor="let star of getStarArray()" 
+        class="star"
+        [class.filled]="star <= post.rating">
+        ⭐
+      </span>
+    </div>
+    <span class="rating-value">{{ post.rating }}/5</span>
+  </div>
+
+  <!-- Caption -->
+  <div class="post-caption">
+    <p>{{ post.caption }}</p>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<div class="rating-stars" (mouseleave)="onMouseLeave()">
+  <span 
+    *ngFor="let star of stars"
+    class="star"
+    [class.filled]="getStarState(star) === 'filled'"
+    [class.interactive]="interactive"
+    (click)="onStarClick(star)"
+    (mouseenter)="onStarHover(star)">
+    ⭐
+  </span>
+</div>

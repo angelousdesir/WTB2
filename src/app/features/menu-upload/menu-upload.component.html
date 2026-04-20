@@ -1,0 +1,123 @@
+<div class="menu-upload-container">
+  <div class="upload-card">
+    <!-- Header -->
+    <div class="card-header">
+      <h1>Upload Menu</h1>
+      <p>Parse your menu and add items automatically</p>
+    </div>
+
+    <!-- Step 1: Select Venue & Upload Image -->
+    <div *ngIf="uploadStep === 'select'" class="upload-form">
+      <form [formGroup]="menuForm">
+        <!-- Venue Selection -->
+        <div class="form-group">
+          <label>Select Venue *</label>
+          <select formControlName="venue_id" class="form-select">
+            <option value="">Choose a venue</option>
+            <option *ngFor="let venue of venues" [value]="venue.id">
+              {{ venue.name }} - {{ venue.city }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Menu Image Upload -->
+        <div class="form-group">
+          <label>Upload Menu Image *</label>
+          
+          <div class="upload-area" *ngIf="!selectedMenuFile">
+            <input 
+              type="file" 
+              id="menuInput" 
+              accept="image/*" 
+              (change)="onMenuFileSelect($event)"
+              hidden>
+            <label for="menuInput" class="upload-label">
+              <div class="upload-icon">📋</div>
+              <p class="upload-text">Click to upload menu image</p>
+              <p class="upload-hint">Supports JPG, PNG (Max 10MB)</p>
+            </label>
+          </div>
+
+          <div class="file-selected" *ngIf="selectedMenuFile">
+            <div class="file-info">
+              <span class="file-icon">📄</span>
+              <div class="file-details">
+                <p class="file-name">{{ selectedMenuFile.name }}</p>
+                <p class="file-size">{{ (selectedMenuFile.size / 1024 / 1024).toFixed(2) }} MB</p>
+              </div>
+            </div>
+            <button type="button" class="btn-remove" (click)="selectedMenuFile = null">Remove</button>
+          </div>
+        </div>
+
+        <!-- Parse Button -->
+        <button 
+          type="button" 
+          class="btn-parse" 
+          (click)="parseMenu()"
+          [disabled]="parsing || !selectedMenuFile || !menuForm.get('venue_id')?.value">
+          <span *ngIf="!parsing">Parse Menu with AI</span>
+          <div *ngIf="parsing" class="btn-loading">
+            <div class="spinner"></div>
+            <span>Parsing menu...</span>
+          </div>
+        </button>
+      </form>
+
+      <!-- Instructions -->
+      <div class="instructions">
+        <h3>📸 Tips for best results:</h3>
+        <ul>
+          <li>Use a clear, well-lit photo of the menu</li>
+          <li>Ensure text is readable and not blurry</li>
+          <li>Avoid glare or shadows on the menu</li>
+          <li>Include prices if available</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Step 2: Preview & Edit -->
+    <div *ngIf="uploadStep === 'preview'" class="preview-section">
+      <div class="preview-header">
+        <h2>Review Parsed Items ({{ parsedItems.length }})</h2>
+        <p>Edit or remove items before saving</p>
+      </div>
+
+      <div class="parsed-items-list">
+        <div *ngFor="let item of parsedItems; let i = index" class="parsed-item">
+          <div class="item-content">
+            <div class="item-number">{{ i + 1 }}</div>
+            <div class="item-details">
+              <h4>{{ item.name }}</h4>
+              <p class="item-desc" *ngIf="item.description">{{ item.description }}</p>
+              <div class="item-meta">
+                <span class="item-category" *ngIf="item.category">{{ item.category }}</span>
+                <span class="item-price" *ngIf="item.price">${{ item.price.toFixed(2) }}</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn-remove-item" (click)="removeItem(i)">
+            <span>🗑️</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="preview-actions">
+        <button class="btn-back" (click)="resetUpload()">Start Over</button>
+        <button class="btn-save" (click)="saveMenuItems()" [disabled]="loading || parsedItems.length === 0">
+          <span *ngIf="!loading">Save {{ parsedItems.length }} Items</span>
+          <div *ngIf="loading" class="spinner"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 3: Success -->
+    <div *ngIf="uploadStep === 'success'" class="success-section">
+      <div class="success-icon">✅</div>
+      <h2>Menu Uploaded Successfully!</h2>
+      <p>{{ parsedItems.length }} items have been added to your venue.</p>
+      <div class="spinner"></div>
+      <p class="redirect-text">Redirecting to venue page...</p>
+    </div>
+  </div>
+</div>

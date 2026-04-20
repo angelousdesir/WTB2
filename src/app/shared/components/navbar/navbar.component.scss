@@ -1,0 +1,354 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: $z-sticky;
+  @include glassmorphism(0.15);
+  border-bottom: 1px solid rgba($color-metallic-gold, 0.2);
+  box-shadow: $shadow-lg;
+}
+
+.navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: $spacing-md $spacing-lg;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-lg;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  cursor: pointer;
+  transition: transform $transition-base;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  @include gold-gradient;
+  border-radius: $radius-lg;
+  @include flex-center;
+  box-shadow: $shadow-gold;
+}
+
+.logo-text {
+  font-size: $font-size-lg;
+  font-weight: 800;
+  color: $color-deep-navy;
+}
+
+.logo-title {
+  font-size: $font-size-xl;
+  font-weight: 700;
+  color: $color-white;
+
+  @include respond-to('mobile') {
+    display: none;
+  }
+}
+
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xl;
+  flex: 1;
+  justify-content: center;
+
+  @include respond-to('mobile') {
+    display: none;
+  }
+}
+
+.nav-link {
+  color: $color-gray-light;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: $font-size-base;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-md;
+  transition: all $transition-base;
+  position: relative;
+
+  &:hover {
+    color: $color-metallic-gold;
+    background: rgba($color-metallic-gold, 0.1);
+  }
+
+  &.active {
+    color: $color-metallic-gold;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 2px;
+      @include gold-gradient;
+      border-radius: $radius-full;
+    }
+  }
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.btn-create {
+  @include button-base;
+  @include gold-gradient;
+  color: $color-deep-navy;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  box-shadow: $shadow-gold;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba($color-metallic-gold, 0.5);
+  }
+
+  .icon {
+    font-size: $font-size-xl;
+    font-weight: 700;
+  }
+
+  .text {
+    @include respond-to('mobile') {
+      display: none;
+    }
+  }
+}
+
+.btn-outline {
+  @include button-base;
+  background: transparent;
+  border: 2px solid $color-metallic-gold;
+  color: $color-metallic-gold;
+
+  &:hover {
+    background: rgba($color-metallic-gold, 0.1);
+  }
+}
+
+.btn-primary {
+  @include button-base;
+  @include gold-gradient;
+  color: $color-deep-navy;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-gold;
+  }
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-full;
+  cursor: pointer;
+  border: 2px solid $color-metallic-gold;
+  overflow: hidden;
+  transition: all $transition-base;
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: $shadow-gold;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  @include gold-gradient;
+  @include flex-center;
+  color: $color-deep-navy;
+  font-weight: 700;
+  font-size: $font-size-lg;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 220px;
+  @include glassmorphism(0.15);
+  border-radius: $radius-lg;
+  box-shadow: $shadow-xl;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all $transition-base;
+
+  &.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-header {
+  padding: $spacing-md;
+  
+  .username {
+    font-weight: 600;
+    color: $color-white;
+    margin-bottom: $spacing-xs;
+  }
+
+  .email {
+    font-size: $font-size-sm;
+    color: $color-gray-medium;
+    margin: 0;
+  }
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: rgba($color-metallic-gold, 0.2);
+  margin: $spacing-sm 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  color: $color-gray-light;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all $transition-base;
+
+  &:hover {
+    background: rgba($color-metallic-gold, 0.1);
+    color: $color-metallic-gold;
+  }
+
+  &.logout {
+    color: $color-error;
+
+    &:hover {
+      background: rgba($color-error, 0.1);
+    }
+  }
+
+  .item-icon {
+    font-size: $font-size-lg;
+  }
+}
+
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-sm;
+
+  @include respond-to('mobile') {
+    display: block;
+  }
+}
+
+.hamburger {
+  display: block;
+  width: 25px;
+  height: 2px;
+  background: $color-metallic-gold;
+  position: relative;
+  transition: all $transition-base;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: $color-metallic-gold;
+    transition: all $transition-base;
+  }
+
+  &::before {
+    top: -8px;
+  }
+
+  &::after {
+    bottom: -8px;
+  }
+
+  &.open {
+    background: transparent;
+
+    &::before {
+      top: 0;
+      transform: rotate(45deg);
+    }
+
+    &::after {
+      bottom: 0;
+      transform: rotate(-45deg);
+    }
+  }
+}
+
+.mobile-nav {
+  display: none;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height $transition-base;
+
+  @include respond-to('mobile') {
+    display: block;
+  }
+
+  &.show {
+    max-height: 500px;
+  }
+}
+
+.mobile-nav-link {
+  display: block;
+  padding: $spacing-md $spacing-lg;
+  color: $color-gray-light;
+  text-decoration: none;
+  border-bottom: 1px solid rgba($color-metallic-gold, 0.1);
+  transition: all $transition-base;
+
+  &:hover,
+  &.highlight {
+    background: rgba($color-metallic-gold, 0.1);
+    color: $color-metallic-gold;
+  }
+
+  &.logout {
+    color: $color-error;
+  }
+}
+
+.mobile-nav-divider {
+  height: 1px;
+  background: rgba($color-metallic-gold, 0.2);
+  margin: $spacing-sm 0;
+}

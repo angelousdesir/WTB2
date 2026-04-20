@@ -1,0 +1,154 @@
+<div class="by-bar-container">
+  <div class="content-wrapper">
+    <!-- Header -->
+    <div class="page-header">
+      <h1>Browse by Venue</h1>
+      <p>Find the best bars and restaurants</p>
+      <button class="btn-add-venue" (click)="navigateToAddVenue()">
+        <span class="icon">+</span>
+        Add a Venue
+      </button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-section">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery"
+          placeholder="Search venues by name, city, or cuisine..."
+          class="search-input">
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <!-- Venues List -->
+      <div class="venues-section">
+        <h2 class="section-title">All Venues</h2>
+
+        <div *ngIf="loading" class="loading">
+          <div class="spinner"></div>
+          <p>Loading venues...</p>
+        </div>
+
+        <div *ngIf="!loading && filteredVenues.length === 0" class="empty-state">
+          <div class="empty-icon">🏪</div>
+          <p>No venues found</p>
+        </div>
+
+        <div class="venues-grid" *ngIf="!loading && filteredVenues.length > 0">
+          <div 
+            *ngFor="let venue of filteredVenues" 
+            class="venue-card"
+            [class.selected]="selectedVenue?.id === venue.id"
+            (click)="selectVenue(venue)">
+            
+            <div class="venue-image" [style.background-image]="venue.image_url ? 'url(' + venue.image_url + ')' : 'none'">
+              <div class="venue-rating">
+                <span class="star">⭐</span>
+                <span class="rating-value">{{ venue.average_rating.toFixed(1) }}</span>
+              </div>
+            </div>
+
+            <div class="venue-info">
+              <h3 class="venue-name">{{ venue.name }}</h3>
+              <p class="venue-location">📍 {{ venue.city }}, {{ venue.state }}</p>
+              <p class="venue-cuisine" *ngIf="venue.cuisine_type">🍽️ {{ venue.cuisine_type }}</p>
+              <p class="venue-reviews">{{ venue.total_reviews }} reviews</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <app-top-items-sidebar></app-top-items-sidebar>
+      </aside>
+    </div>
+
+    <!-- Venue Details Modal -->
+    <div class="modal-overlay" *ngIf="selectedVenue" (click)="clearSelection()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <button class="modal-close" (click)="clearSelection()">✕</button>
+        
+        <!-- Venue Header -->
+        <div class="venue-header">
+          <div class="venue-header-image" [style.background-image]="selectedVenue.image_url ? 'url(' + selectedVenue.image_url + ')' : 'none'"></div>
+          <div class="venue-header-info">
+            <h2>{{ selectedVenue.name }}</h2>
+            <div class="venue-rating-large">
+              <div class="stars">
+                <span *ngFor="let s of [1,2,3,4,5]" class="star" [class.filled]="s <= selectedVenue.average_rating">⭐</span>
+              </div>
+              <span class="rating-text">{{ selectedVenue.average_rating.toFixed(1) }} / 5.0</span>
+              <span class="review-count">({{ selectedVenue.total_reviews }} reviews)</span>
+            </div>
+            <p class="venue-description" *ngIf="selectedVenue.description">{{ selectedVenue.description }}</p>
+          </div>
+        </div>
+
+        <!-- Venue Details -->
+        <div class="venue-details">
+          <div class="detail-item">
+            <span class="detail-icon">📍</span>
+            <div class="detail-text">
+              <strong>Address</strong>
+              <p>{{ selectedVenue.address }}, {{ selectedVenue.city }}, {{ selectedVenue.state }} {{ selectedVenue.zip_code }}</p>
+            </div>
+          </div>
+          <div class="detail-item" *ngIf="selectedVenue.phone">
+            <span class="detail-icon">📞</span>
+            <div class="detail-text">
+              <strong>Phone</strong>
+              <p>{{ selectedVenue.phone }}</p>
+            </div>
+          </div>
+          <div class="detail-item" *ngIf="selectedVenue.website">
+            <span class="detail-icon">🌐</span>
+            <div class="detail-text">
+              <strong>Website</strong>
+              <p><a [href]="selectedVenue.website" target="_blank">{{ selectedVenue.website }}</a></p>
+            </div>
+          </div>
+          <div class="detail-item" *ngIf="selectedVenue.cuisine_type">
+            <span class="detail-icon">🍽️</span>
+            <div class="detail-text">
+              <strong>Cuisine</strong>
+              <p>{{ selectedVenue.cuisine_type }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Menu Items -->
+        <div class="menu-section" *ngIf="venueMenuItems.length > 0">
+          <h3>Menu Items</h3>
+          <div class="menu-grid">
+            <div *ngFor="let item of venueMenuItems" class="menu-item-card">
+              <h4>{{ item.name }}</h4>
+              <p class="menu-item-desc" *ngIf="item.description">{{ item.description }}</p>
+              <div class="menu-item-footer">
+                <span class="menu-item-price" *ngIf="item.price">${{ item.price.toFixed(2) }}</span>
+                <span class="menu-item-rating">
+                  ⭐ {{ item.average_rating.toFixed(1) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reviews -->
+        <div class="reviews-section">
+          <h3>Reviews</h3>
+          <div *ngIf="venuePosts.length === 0" class="no-reviews">
+            <p>No reviews yet. Be the first to review!</p>
+            <button class="btn-primary" routerLink="/create-post">Write a Review</button>
+          </div>
+          <div class="reviews-list">
+            <app-post-card *ngFor="let post of venuePosts" [post]="post"></app-post-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

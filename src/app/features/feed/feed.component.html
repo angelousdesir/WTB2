@@ -1,0 +1,47 @@
+<div class="feed-container">
+  <div class="feed-content">
+    <!-- Header -->
+    <div class="feed-header">
+      <h1>Latest Reviews</h1>
+      <p>Discover what the community is loving</p>
+    </div>
+
+    <!-- Posts Grid -->
+    <div class="posts-wrapper">
+      <div class="posts-main">
+        <div class="posts-list">
+          <app-post-card 
+            *ngFor="let post of posts" 
+            [post]="post"
+            [showDelete]="false"
+            (deletePost)="onDeletePost($event)">
+          </app-post-card>
+
+          <!-- Loading indicator -->
+          <div *ngIf="loading" class="loading-indicator">
+            <div class="spinner"></div>
+            <p>Loading more reviews...</p>
+          </div>
+
+          <!-- No more posts -->
+          <div *ngIf="!hasMore && posts.length > 0" class="end-message">
+            <p>🎉 You've reached the end!</p>
+          </div>
+
+          <!-- Empty state -->
+          <div *ngIf="!loading && posts.length === 0" class="empty-state">
+            <div class="empty-icon">📭</div>
+            <h3>No reviews yet</h3>
+            <p>Be the first to share your dining experience!</p>
+            <button class="btn-primary" routerLink="/create-post">Create First Post</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="feed-sidebar">
+        <app-top-items-sidebar></app-top-items-sidebar>
+      </aside>
+    </div>
+  </div>
+</div>

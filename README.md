@@ -1,59 +1,77 @@
-# FoodBarReviewApp
+# 🍽️ FoodBar Reviews
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.24.
+A modern, full-stack mobile-ready application for reviewing food and drinks at restaurants and bars. Built with Angular 20 and Supabase.
 
-## Development server
+## ✨ Features
 
-To start a local development server, run:
+- **User Authentication** - Secure email/password registration and login
+- **Item-Specific Reviews** - Rate individual menu items, not just venues
+- **Photo Uploads** - Share food photography with image storage
+- **AI Menu Parsing** - Upload menu images and extract items automatically using OCR
+- **Browse & Discover** - Find items by food type, venue, or category
+- **Owner Dashboard** - Restaurant owners can track ratings and feedback
+- **Real-time Updates** - Automatic rating calculations with database triggers
+- **Responsive Design** - Premium blue & gold themed UI that works on all devices
 
-```bash
-ng serve
-```
+## 🚀 Tech Stack
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- **Frontend**: Angular 20, TypeScript, SCSS
+- **Backend**: Supabase (PostgreSQL, Authentication, Storage, Edge Functions)
+- **State Management**: RxJS
+- **Styling**: Custom SCSS with glassmorphism effects
+- **OCR**: Tesseract.js for menu parsing
+- **Icons & Fonts**: Google Fonts (Inter)
 
-## Code scaffolding
+## 📦 Installation
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+See [SETUP_INSTRUCTIONS.md](./SETUP_INSTRUCTIONS.md) for detailed setup guide.
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+Quick start:
 
 ```bash
-ng build
+# Install dependencies
+npm install
+
+# Set up environment variables
+# Copy your Supabase credentials to src/environments/environment.ts
+
+# Start development server
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 🗄️ Database Schema
 
-## Running unit tests
+- **users** - User profiles and authentication
+- **venues** - Restaurants and bars
+- **menu_items** - Individual food and drink items
+- **posts** - User reviews with ratings and photos
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## 📱 Mobile Deployment
+
+This app is built mobile-ready and can be deployed to iOS and Android using Capacitor:
 
 ```bash
-ng test
+npm install @capacitor/core @capacitor/cli
+npx cap init
+npx cap add android
+npx cap add ios
 ```
 
-## Running end-to-end tests
+## 🎨 Design System
 
-For end-to-end (e2e) testing, run:
+- **Primary Colors**: Deep Navy Blue (#0F172A), Royal Blue (#1D4ED8)
+- **Accent Colors**: Metallic Gold (#D4AF37), Soft Amber (#FBBF24)
+- **Typography**: Inter font family
+- **Effects**: Glassmorphism, smooth transitions, gold gradients
 
-```bash
-ng e2e
-```
+## 📄 License
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+MIT License - feel free to use this project for learning or commercial purposes.
 
-## Additional Resources
+## 🤝 Contributing
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📧 Support
+
+For issues or questions, please open an issue on GitHub.

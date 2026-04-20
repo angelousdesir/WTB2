@@ -1,0 +1,149 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.auth-container {
+  min-height: 100vh;
+  @include flex-center;
+  padding: $spacing-xl;
+  background: radial-gradient(circle at top right, rgba($color-royal-blue, 0.2), transparent),
+              radial-gradient(circle at bottom left, rgba($color-metallic-gold, 0.1), transparent),
+              $color-background-dark;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 450px;
+  @include card;
+  padding: $spacing-2xl;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: $spacing-2xl;
+
+  .logo {
+    margin-bottom: $spacing-lg;
+  }
+
+  .logo-icon {
+    display: inline-block;
+    padding: $spacing-lg;
+    @include gold-gradient;
+    border-radius: $radius-xl;
+    font-size: $font-size-3xl;
+    font-weight: 800;
+    color: $color-deep-navy;
+    box-shadow: $shadow-gold;
+  }
+
+  h1 {
+    font-size: $font-size-3xl;
+    font-weight: 700;
+    color: $color-white;
+    margin: 0 0 $spacing-sm 0;
+  }
+
+  p {
+    color: $color-gray-medium;
+    margin: 0;
+  }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+
+  label {
+    font-weight: 600;
+    color: $color-gray-light;
+    font-size: $font-size-sm;
+  }
+
+  input {
+    padding: $spacing-md;
+    background: rgba($color-royal-blue, 0.1);
+    border: 2px solid rgba($color-metallic-gold, 0.2);
+    border-radius: $radius-lg;
+    color: $color-white;
+    font-size: $font-size-base;
+    transition: all $transition-base;
+
+    &:focus {
+      outline: none;
+      border-color: $color-metallic-gold;
+      box-shadow: 0 0 0 3px rgba($color-metallic-gold, 0.1);
+    }
+
+    &.error {
+      border-color: $color-error;
+    }
+
+    &::placeholder {
+      color: $color-gray-medium;
+    }
+  }
+}
+
+.error-message {
+  color: $color-error;
+  font-size: $font-size-sm;
+}
+
+.error-alert {
+  padding: $spacing-md;
+  background: rgba($color-error, 0.1);
+  border: 1px solid $color-error;
+  border-radius: $radius-md;
+  color: $color-error;
+  font-size: $font-size-sm;
+}
+
+.btn-submit {
+  @include button-base;
+  @include gold-gradient;
+  color: $color-deep-navy;
+  font-size: $font-size-lg;
+  margin-top: $spacing-md;
+  box-shadow: $shadow-gold;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba($color-metallic-gold, 0.5);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.auth-footer {
+  margin-top: $spacing-xl;
+  text-align: center;
+
+  p {
+    color: $color-gray-medium;
+    margin: 0;
+
+    a {
+      color: $color-metallic-gold;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color $transition-base;
+
+      &:hover {
+        color: $color-soft-amber;
+        text-decoration: underline;
+      }
+    }
+  }
+}

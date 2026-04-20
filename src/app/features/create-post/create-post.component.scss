@@ -1,0 +1,201 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.create-post-container {
+  min-height: 100vh;
+  padding: $spacing-xl;
+  @include flex-center;
+}
+
+.create-post-card {
+  width: 100%;
+  max-width: 700px;
+  @include card;
+  padding: $spacing-2xl;
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: $spacing-2xl;
+
+  h1 {
+    font-size: $font-size-3xl;
+    font-weight: 700;
+    color: $color-white;
+    margin-bottom: $spacing-sm;
+  }
+
+  p {
+    color: $color-gray-medium;
+  }
+}
+
+.post-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.section-label {
+  font-weight: 600;
+  color: $color-gray-light;
+  font-size: $font-size-base;
+}
+
+.image-upload {
+  width: 100%;
+}
+
+.upload-area {
+  @include glassmorphism(0.05);
+  border: 2px dashed rgba($color-metallic-gold, 0.3);
+  border-radius: $radius-xl;
+  padding: $spacing-2xl;
+  cursor: pointer;
+  transition: all $transition-base;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-md;
+
+  &:hover {
+    border-color: $color-metallic-gold;
+    background: rgba($color-metallic-gold, 0.05);
+  }
+
+  .upload-icon {
+    font-size: 4rem;
+  }
+
+  .upload-text {
+    color: $color-white;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .upload-hint {
+    color: $color-gray-medium;
+    font-size: $font-size-sm;
+    margin: 0;
+  }
+}
+
+.image-preview {
+  position: relative;
+  width: 100%;
+  max-height: 400px;
+  border-radius: $radius-xl;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .remove-image {
+    position: absolute;
+    top: $spacing-md;
+    right: $spacing-md;
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-full;
+    background: rgba($color-error, 0.9);
+    border: none;
+    color: $color-white;
+    font-size: $font-size-xl;
+    cursor: pointer;
+    @include flex-center;
+    transition: all $transition-base;
+
+    &:hover {
+      background: $color-error;
+      transform: scale(1.1);
+    }
+  }
+}
+
+.form-select,
+.form-textarea {
+  padding: $spacing-md;
+  background: rgba($color-royal-blue, 0.1);
+  border: 2px solid rgba($color-metallic-gold, 0.2);
+  border-radius: $radius-lg;
+  color: $color-white;
+  font-size: $font-size-base;
+  font-family: $font-family-primary;
+  transition: all $transition-base;
+
+  &:focus {
+    outline: none;
+    border-color: $color-metallic-gold;
+    box-shadow: 0 0 0 3px rgba($color-metallic-gold, 0.1);
+  }
+
+  &.error {
+    border-color: $color-error;
+  }
+
+  option {
+    background: $color-deep-navy;
+    color: $color-white;
+  }
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+.field-hint {
+  color: $color-gray-medium;
+  font-size: $font-size-sm;
+  margin: 0;
+
+  &.error {
+    color: $color-error;
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-lg;
+}
+
+.btn-cancel {
+  @include button-base;
+  flex: 1;
+  background: transparent;
+  border: 2px solid $color-gray-medium;
+  color: $color-gray-light;
+
+  &:hover:not(:disabled) {
+    border-color: $color-white;
+    color: $color-white;
+  }
+}
+
+.btn-submit {
+  @include button-base;
+  flex: 2;
+  @include gold-gradient;
+  color: $color-deep-navy;
+  box-shadow: $shadow-gold;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba($color-metallic-gold, 0.5);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

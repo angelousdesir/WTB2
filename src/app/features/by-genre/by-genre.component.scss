@@ -1,0 +1,137 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.by-genre-container {
+  min-height: 100vh;
+  padding: $spacing-xl;
+}
+
+.content-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: $spacing-2xl;
+
+  h1 {
+    font-size: $font-size-3xl;
+    font-weight: 700;
+    color: $color-white;
+    margin-bottom: $spacing-sm;
+  }
+
+  p {
+    color: $color-gray-medium;
+    font-size: $font-size-lg;
+  }
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $spacing-lg;
+  margin-bottom: $spacing-2xl;
+}
+
+.category-card {
+  @include card;
+  text-align: center;
+  cursor: pointer;
+  transition: all $transition-base;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: $shadow-xl, $shadow-gold;
+  }
+
+  &.selected {
+    border: 2px solid $color-metallic-gold;
+    box-shadow: $shadow-xl, $shadow-gold;
+  }
+}
+
+.category-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto $spacing-md;
+  border-radius: $radius-xl;
+  @include flex-center;
+  font-size: 3rem;
+  box-shadow: $shadow-md;
+}
+
+.category-card h3 {
+  font-size: $font-size-lg;
+  font-weight: 600;
+  color: $color-white;
+  margin: 0;
+}
+
+.category-posts-section {
+  margin-top: $spacing-2xl;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-xl;
+  padding-bottom: $spacing-lg;
+  border-bottom: 2px solid rgba($color-metallic-gold, 0.2);
+
+  h2 {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $color-metallic-gold;
+    margin: 0;
+  }
+}
+
+.btn-clear {
+  @include button-base;
+  background: transparent;
+  border: 2px solid $color-gray-medium;
+  color: $color-gray-light;
+  padding: $spacing-sm $spacing-lg;
+
+  &:hover {
+    border-color: $color-white;
+    color: $color-white;
+  }
+}
+
+.loading,
+.empty-state {
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-2xl;
+  gap: $spacing-md;
+
+  .empty-icon {
+    font-size: 5rem;
+  }
+
+  p {
+    color: $color-gray-medium;
+    font-size: $font-size-lg;
+  }
+
+  .btn-primary {
+    @include button-base;
+    @include gold-gradient;
+    color: $color-deep-navy;
+    margin-top: $spacing-md;
+  }
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: $spacing-xl;
+
+  @include respond-to('mobile') {
+    grid-template-columns: 1fr;
+  }
+}

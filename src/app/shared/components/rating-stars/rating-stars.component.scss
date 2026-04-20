@@ -1,0 +1,27 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.rating-stars {
+  display: flex;
+  gap: $spacing-xs;
+}
+
+.star {
+  font-size: $font-size-2xl;
+  filter: grayscale(100%);
+  opacity: 0.3;
+  transition: all $transition-base;
+
+  &.filled {
+    filter: grayscale(0%);
+    opacity: 1;
+  }
+
+  &.interactive {
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+}

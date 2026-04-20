@@ -1,0 +1,127 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.about-container {
+  min-height: 100vh;
+  padding: $spacing-xl;
+}
+
+.about-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.about-header {
+  text-align: center;
+  margin-bottom: $spacing-2xl;
+  padding-bottom: $spacing-2xl;
+  border-bottom: 2px solid rgba($color-metallic-gold, 0.2);
+
+  h1 {
+    font-size: $font-size-4xl;
+    font-weight: 800;
+    color: $color-white;
+    margin-bottom: $spacing-md;
+  }
+
+  .tagline {
+    font-size: $font-size-lg;
+    color: $color-metallic-gold;
+    font-weight: 500;
+  }
+}
+
+.about-sections {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2xl;
+}
+
+.about-section {
+  @include card;
+  animation: fadeIn 0.6s ease-out;
+
+  .section-icon {
+    font-size: 4rem;
+    text-align: center;
+    margin-bottom: $spacing-lg;
+  }
+
+  h2 {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $color-metallic-gold;
+    margin-bottom: $spacing-md;
+    text-align: center;
+  }
+
+  p {
+    color: $color-gray-light;
+    line-height: 1.8;
+    font-size: $font-size-base;
+  }
+
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+
+    li {
+      color: $color-gray-light;
+      line-height: 1.8;
+      padding-left: $spacing-xl;
+      position: relative;
+
+      &::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: $color-metallic-gold;
+        font-weight: 700;
+        font-size: $font-size-lg;
+      }
+
+      strong {
+        color: $color-white;
+      }
+    }
+  }
+}
+
+.cta-section {
+  @include glassmorphism(0.1);
+  border-radius: $radius-2xl;
+  padding: $spacing-2xl;
+  text-align: center;
+  margin-top: $spacing-2xl;
+  border: 2px solid rgba($color-metallic-gold, 0.3);
+
+  h2 {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $color-white;
+    margin-bottom: $spacing-md;
+  }
+
+  p {
+    font-size: $font-size-lg;
+    color: $color-gray-light;
+    margin-bottom: $spacing-xl;
+  }
+
+  .btn-cta {
+    @include button-base;
+    @include gold-gradient;
+    color: $color-deep-navy;
+    font-size: $font-size-lg;
+    box-shadow: $shadow-gold;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba($color-metallic-gold, 0.5);
+    }
+  }
+}

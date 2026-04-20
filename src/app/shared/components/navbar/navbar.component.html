@@ -1,0 +1,90 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Logo -->
+    <div class="navbar-logo" (click)="navigateTo('/home')">
+      <div class="logo-icon">
+        <span class="logo-text">F&B</span>
+      </div>
+      <span class="logo-title">FoodBar Reviews</span>
+    </div>
+
+    <!-- Desktop Navigation -->
+    <div class="navbar-menu desktop-menu">
+      <a routerLink="/home" routerLinkActive="active" class="nav-link">Home</a>
+      <a routerLink="/by-food-item" routerLinkActive="active" class="nav-link">By Food Item</a>
+      <a routerLink="/by-bar" routerLinkActive="active" class="nav-link">By Bar</a>
+      <a routerLink="/by-genre" routerLinkActive="active" class="nav-link">By Genre</a>
+      <a routerLink="/about" routerLinkActive="active" class="nav-link">About</a>
+      <a routerLink="/contact" routerLinkActive="active" class="nav-link">Contact</a>
+    </div>
+
+    <!-- Right Side Actions -->
+    <div class="navbar-actions">
+      <ng-container *ngIf="currentUser; else loginButtons">
+        <!-- Create Post Button -->
+        <button class="btn-create" (click)="navigateTo('/create-post')">
+          <span class="icon">+</span>
+          <span class="text">Create Post</span>
+        </button>
+
+        <!-- User Avatar & Dropdown -->
+        <div class="user-menu">
+          <div class="user-avatar" (click)="toggleMenu()">
+            <img *ngIf="currentUser.avatar_url" [src]="currentUser.avatar_url" alt="Avatar">
+            <span *ngIf="!currentUser.avatar_url" class="avatar-placeholder">
+              {{ currentUser.username?.charAt(0).toUpperCase() || 'U' }}
+            </span>
+          </div>
+          
+          <div class="dropdown-menu" [class.show]="isMenuOpen">
+            <div class="dropdown-header">
+              <p class="username">{{ currentUser.username }}</p>
+              <p class="email">{{ currentUser.email }}</p>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" (click)="navigateTo('/menu-upload')" *ngIf="currentUser.role === 'owner' || currentUser.role === 'admin'">
+              <span class="item-icon">📋</span>
+              Upload Menu
+            </a>
+            <a class="dropdown-item" (click)="navigateTo('/my-venues')" *ngIf="currentUser.role === 'owner' || currentUser.role === 'admin'">
+              <span class="item-icon">🏪</span>
+              My Venues
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item logout" (click)="logout()">
+              <span class="item-icon">🚪</span>
+              Sign Out
+            </a>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #loginButtons>
+        <button class="btn-outline" (click)="navigateTo('/login')">Login</button>
+        <button class="btn-primary" (click)="navigateTo('/register')">Sign Up</button>
+      </ng-template>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-menu-toggle" (click)="toggleMenu()">
+        <span class="hamburger" [class.open]="isMenuOpen"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Menu -->
+  <div class="mobile-nav" [class.show]="isMenuOpen">
+    <a routerLink="/home" (click)="toggleMenu()" class="mobile-nav-link">Home</a>
+    <a routerLink="/by-food-item" (click)="toggleMenu()" class="mobile-nav-link">By Food Item</a>
+    <a routerLink="/by-bar" (click)="toggleMenu()" class="mobile-nav-link">By Bar</a>
+    <a routerLink="/by-genre" (click)="toggleMenu()" class="mobile-nav-link">By Genre</a>
+    <a routerLink="/about" (click)="toggleMenu()" class="mobile-nav-link">About</a>
+    <a routerLink="/contact" (click)="toggleMenu()" class="mobile-nav-link">Contact</a>
+    
+    <ng-container *ngIf="currentUser">
+      <div class="mobile-nav-divider"></div>
+      <a routerLink="/create-post" (click)="toggleMenu()" class="mobile-nav-link highlight">Create Post</a>
+      <a routerLink="/menu-upload" (click)="toggleMenu()" class="mobile-nav-link" *ngIf="currentUser.role === 'owner' || currentUser.role === 'admin'">Upload Menu</a>
+      <a (click)="logout()" class="mobile-nav-link logout">Sign Out</a>
+    </ng-container>
+  </div>
+</nav>

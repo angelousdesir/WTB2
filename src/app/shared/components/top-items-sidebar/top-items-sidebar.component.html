@@ -1,0 +1,32 @@
+<div class="top-items-sidebar">
+  <h3 class="sidebar-title">🏆 Top 5 Food Items</h3>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!loading && topItems.length === 0" class="empty-state">
+    <p>No items rated yet</p>
+  </div>
+
+  <div class="items-list" *ngIf="!loading && topItems.length > 0">
+    <div *ngFor="let item of topItems; let i = index" class="item-card">
+      <div class="rank-badge">{{ i + 1 }}</div>
+      
+      <div class="item-details">
+        <h4 class="item-name">{{ item.name }}</h4>
+        <p class="item-venue" *ngIf="item.venue">{{ item.venue.name }}</p>
+        
+        <div class="item-rating">
+          <span class="stars">
+            <span *ngFor="let s of [1,2,3,4,5]" 
+                  class="star" 
+                  [class.filled]="s <= item.average_rating">⭐</span>
+          </span>
+          <span class="rating-value">{{ item.average_rating.toFixed(1) }}</span>
+          <span class="review-count">({{ item.total_reviews }})</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

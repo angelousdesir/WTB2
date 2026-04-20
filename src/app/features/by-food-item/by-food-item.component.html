@@ -1,0 +1,110 @@
+<div class="by-food-item-container">
+  <div class="content-wrapper">
+    <!-- Header -->
+    <div class="page-header">
+      <h1>Browse by Food Item</h1>
+      <p>Discover the highest-rated dishes and drinks</p>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-section">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery"
+          placeholder="Search for a specific dish or drink..."
+          class="search-input">
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <!-- Items List -->
+      <div class="items-section">
+        <h2 class="section-title">All Items</h2>
+
+        <div *ngIf="loading" class="loading">
+          <div class="spinner"></div>
+          <p>Loading menu items...</p>
+        </div>
+
+        <div *ngIf="!loading && filteredItems.length === 0" class="empty-state">
+          <div class="empty-icon">🍽️</div>
+          <p>No items found</p>
+        </div>
+
+        <div class="items-grid" *ngIf="!loading && filteredItems.length > 0">
+          <div 
+            *ngFor="let item of filteredItems" 
+            class="item-card"
+            [class.selected]="selectedItem?.id === item.id"
+            (click)="selectItem(item)">
+            
+            <div class="item-image" [style.background-image]="item.image_url ? 'url(' + item.image_url + ')' : 'none'">
+              <div class="item-rating">
+                <span class="star">⭐</span>
+                <span class="rating-value">{{ item.average_rating.toFixed(1) }}</span>
+              </div>
+            </div>
+
+            <div class="item-info">
+              <h3 class="item-name">{{ item.name }}</h3>
+              <p class="item-category" *ngIf="item.category">{{ item.category }}</p>
+              <p class="item-price" *ngIf="item.price">${{ item.price.toFixed(2) }}</p>
+              <p class="item-reviews">{{ item.total_reviews }} reviews</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <app-top-items-sidebar></app-top-items-sidebar>
+      </aside>
+    </div>
+
+    <!-- Item Details Modal -->
+    <div class="modal-overlay" *ngIf="selectedItem" (click)="clearSelection()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <button class="modal-close" (click)="clearSelection()">✕</button>
+        
+        <div class="modal-header">
+          <h2>{{ selectedItem.name }}</h2>
+          <div class="modal-rating">
+            <div class="stars">
+              <span *ngFor="let s of [1,2,3,4,5]" class="star" [class.filled]="s <= selectedItem.average_rating">⭐</span>
+            </div>
+            <span class="rating-text">{{ selectedItem.average_rating.toFixed(1) }} / 5.0</span>
+          </div>
+        </div>
+
+        <div class="modal-body">
+          <div class="item-details">
+            <p *ngIf="selectedItem.description" class="item-description">{{ selectedItem.description }}</p>
+            <div class="item-meta">
+              <span class="meta-item" *ngIf="selectedItem.category">
+                <strong>Category:</strong> {{ selectedItem.category }}
+              </span>
+              <span class="meta-item" *ngIf="selectedItem.price">
+                <strong>Price:</strong> ${{ selectedItem.price.toFixed(2) }}
+              </span>
+              <span class="meta-item">
+                <strong>Reviews:</strong> {{ selectedItem.total_reviews }}
+              </span>
+            </div>
+          </div>
+
+          <div class="reviews-section">
+            <h3>Reviews</h3>
+            <div *ngIf="itemPosts.length === 0" class="no-reviews">
+              <p>No reviews yet. Be the first to review!</p>
+            </div>
+            <div class="reviews-list">
+              <app-post-card *ngFor="let post of itemPosts" [post]="post"></app-post-card>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

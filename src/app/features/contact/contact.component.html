@@ -1,0 +1,105 @@
+<div class="contact-container">
+  <div class="contact-content">
+    <div class="contact-header">
+      <h1>Get in Touch</h1>
+      <p>We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+    </div>
+
+    <div class="contact-grid">
+      <!-- Contact Form -->
+      <div class="form-section">
+        <div *ngIf="submitted" class="success-message">
+          <div class="success-icon">✅</div>
+          <h3>Message Sent!</h3>
+          <p>Thank you for contacting us. We'll get back to you soon.</p>
+        </div>
+
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" *ngIf="!submitted">
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              placeholder="John Doe"
+              [class.error]="contactForm.get('name')?.invalid && contactForm.get('name')?.touched">
+            <span class="error-message" *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched">
+              Name is required
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              placeholder="you@example.com"
+              [class.error]="contactForm.get('email')?.invalid && contactForm.get('email')?.touched">
+            <span class="error-message" *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched">
+              Please enter a valid email
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input
+              type="text"
+              id="subject"
+              formControlName="subject"
+              placeholder="How can we help?"
+              [class.error]="contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched">
+            <span class="error-message" *ngIf="contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched">
+              Subject is required
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea
+              id="message"
+              formControlName="message"
+              rows="6"
+              placeholder="Tell us more about your inquiry..."
+              [class.error]="contactForm.get('message')?.invalid && contactForm.get('message')?.touched">
+            </textarea>
+            <span class="error-message" *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched">
+              Message must be at least 20 characters
+            </span>
+          </div>
+
+          <button type="submit" class="btn-submit" [disabled]="contactForm.invalid">
+            Send Message
+          </button>
+        </form>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="info-section">
+        <div class="info-card">
+          <div class="info-icon">📧</div>
+          <h3>Email Us</h3>
+          <p>support@foodbarreviews.com</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon">💬</div>
+          <h3>Community</h3>
+          <p>Join our community forum for discussions and tips</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon">📱</div>
+          <h3>Social Media</h3>
+          <p>Follow us on Twitter, Instagram, and Facebook</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon">🏢</div>
+          <h3>Business Inquiries</h3>
+          <p>business@foodbarreviews.com</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

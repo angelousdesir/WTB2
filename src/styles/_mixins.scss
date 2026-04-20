@@ -1,0 +1,73 @@
+@import 'variables';
+
+// Glassmorphism effect
+@mixin glassmorphism($opacity: 0.1) {
+  background: rgba(29, 78, 216, $opacity);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+// Gold gradient
+@mixin gold-gradient {
+  background: linear-gradient(135deg, $color-metallic-gold 0%, $color-soft-amber 100%);
+}
+
+// Flex center
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Responsive breakpoints
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'mobile' {
+    @media (max-width: 640px) { @content; }
+  }
+  @else if $breakpoint == 'tablet' {
+    @media (min-width: 641px) and (max-width: 1024px) { @content; }
+  }
+  @else if $breakpoint == 'desktop' {
+    @media (min-width: 1025px) { @content; }
+  }
+}
+
+// Truncate text
+@mixin truncate($lines: 1) {
+  @if $lines == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+// Button base styles
+@mixin button-base {
+  padding: $spacing-md $spacing-xl;
+  border-radius: $radius-lg;
+  font-weight: 600;
+  font-size: $font-size-base;
+  cursor: pointer;
+  transition: all $transition-base;
+  border: none;
+  outline: none;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Card styles
+@mixin card {
+  @include glassmorphism(0.05);
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  box-shadow: $shadow-lg;
+}

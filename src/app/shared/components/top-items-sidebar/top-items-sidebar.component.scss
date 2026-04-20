@@ -1,0 +1,108 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.top-items-sidebar {
+  @include card;
+  position: sticky;
+  top: 100px;
+}
+
+.sidebar-title {
+  font-size: $font-size-xl;
+  font-weight: 700;
+  color: $color-metallic-gold;
+  margin-bottom: $spacing-lg;
+  text-align: center;
+}
+
+.loading,
+.empty-state {
+  @include flex-center;
+  padding: $spacing-xl;
+  color: $color-gray-medium;
+}
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.item-card {
+  display: flex;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: rgba($color-royal-blue, 0.2);
+  border-radius: $radius-lg;
+  border: 1px solid rgba($color-metallic-gold, 0.1);
+  transition: all $transition-base;
+
+  &:hover {
+    background: rgba($color-royal-blue, 0.3);
+    border-color: $color-metallic-gold;
+    transform: translateX(4px);
+  }
+}
+
+.rank-badge {
+  width: 32px;
+  height: 32px;
+  @include gold-gradient;
+  border-radius: $radius-full;
+  @include flex-center;
+  color: $color-deep-navy;
+  font-weight: 800;
+  font-size: $font-size-base;
+  flex-shrink: 0;
+}
+
+.item-details {
+  flex: 1;
+}
+
+.item-name {
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $color-white;
+  margin: 0 0 $spacing-xs 0;
+  @include truncate(2);
+}
+
+.item-venue {
+  font-size: $font-size-sm;
+  color: $color-gray-medium;
+  margin: 0 0 $spacing-sm 0;
+  @include truncate(1);
+}
+
+.item-rating {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  font-size: $font-size-sm;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+}
+
+.star {
+  font-size: $font-size-sm;
+  filter: grayscale(100%);
+  opacity: 0.3;
+
+  &.filled {
+    filter: grayscale(0%);
+    opacity: 1;
+  }
+}
+
+.rating-value {
+  color: $color-metallic-gold;
+  font-weight: 700;
+}
+
+.review-count {
+  color: $color-gray-medium;
+}
