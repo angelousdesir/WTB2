@@ -45,7 +45,7 @@ export class FeedComponent implements OnInit {
   }
 
  
- @HostListener('window:scroll', ['$event']) 
+ @HostListener('window:scroll')
   onScroll(): void {
     const scrollPosition = window.pageYOffset + window.innerHeight;
     const pageHeight = document.documentElement.scrollHeight;
