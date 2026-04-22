@@ -12,7 +12,20 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
       <main class="main-content">
         <router-outlet></router-outlet>
       </main>
+      <!-- Debug text -->
+      <div style="position: fixed; bottom: 10px; right: 10px; background: red; color: white; padding: 10px;">
+        App is loading!
+      </div>
     </div>
+
+
+
+    <!--<div class="app-container">
+      <app-navbar></app-navbar>
+      <main class="main-content">
+        <router-outlet></router-outlet>
+      </main>
+    </div>-->
   `,
   styleUrls: ['./app.component.scss']
 })

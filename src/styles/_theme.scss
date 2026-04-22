@@ -1,0 +1,32 @@
+@import 'variables';
+@import 'mixins';
+
+// Dark Theme (Default)
+:root {
+  --color-background: #{$color-background-dark};
+  --color-surface: #{$color-deep-navy};
+  --color-text-primary: #{$color-white};
+  --color-text-secondary: #{$color-gray-light};
+  --color-accent: #{$color-metallic-gold};
+  --color-primary: #{$color-royal-blue};
+}
+
+// Light Theme (Optional - for future use)
+[data-theme='light'] {
+  --color-background: #{$color-white};
+  --color-surface: #{$color-gray-light};
+  --color-text-primary: #{$color-black};
+  --color-text-secondary: #{$color-gray-dark};
+  --color-accent: #{$color-metallic-gold};
+  --color-primary: #{$color-royal-blue};
+}
+
+// Theme utilities
+.theme-dark {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+.theme-surface {
+  background-color: var(--color-surface);
+}
