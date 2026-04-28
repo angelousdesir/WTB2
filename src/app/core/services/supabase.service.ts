@@ -11,7 +11,14 @@ export class SupabaseService {
   constructor() {
     this.supabase = createClient(
       environment.supabaseUrl,
-      environment.supabaseAnonKey
+      environment.supabaseAnonKey,
+      {
+        auth: {
+          autoRefreshToken: true,
+          persistSession: true,
+          detectSessionInUrl: true
+        }
+      }
     );
   }
 
@@ -21,10 +28,6 @@ export class SupabaseService {
 
   /**
    * Upload file to Supabase storage bucket
-   * @param bucket - Storage bucket name
-   * @param path - File path in bucket
-   * @param file - File to upload
-   * @returns Public URL of uploaded file
    */
   async uploadFile(bucket: string, path: string, file: File): Promise<string> {
     const { data, error } = await this.supabase.storage

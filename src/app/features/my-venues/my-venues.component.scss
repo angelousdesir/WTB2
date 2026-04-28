@@ -1,0 +1,329 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.my-venues-container {
+  min-height: 100vh;
+  padding: $spacing-xl;
+  background-color: $color-background-dark;
+}
+
+.content-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-2xl;
+  padding-bottom: $spacing-lg;
+  border-bottom: 2px solid rgba($color-metallic-gold, 0.2);
+
+  @include respond-to('mobile') {
+    flex-direction: column;
+    gap: $spacing-lg;
+    align-items: flex-start;
+  }
+
+  .header-content {
+    h1 {
+      font-size: $font-size-3xl;
+      font-weight: 700;
+      color: $color-white;
+      margin: 0 0 $spacing-xs 0;
+    }
+
+    p {
+      color: $color-gray-medium;
+      font-size: $font-size-lg;
+      margin: 0;
+    }
+  }
+}
+
+.btn-add-venue {
+  @include button-base;
+  @include gold-gradient;
+  color: $color-deep-navy;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  box-shadow: $shadow-gold;
+
+  .icon {
+    font-size: $font-size-xl;
+    font-weight: 700;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba($color-metallic-gold, 0.5);
+  }
+
+  @include respond-to('mobile') {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.loading,
+.empty-state {
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-2xl * 2;
+  gap: $spacing-lg;
+  color: $color-gray-medium;
+
+  .empty-icon {
+    font-size: 6rem;
+  }
+
+  h2 {
+    color: $color-white;
+    font-size: $font-size-2xl;
+    margin: 0;
+  }
+
+  p {
+    font-size: $font-size-lg;
+    margin: 0;
+  }
+
+  .btn-primary {
+    @include button-base;
+    @include gold-gradient;
+    color: $color-deep-navy;
+    margin-top: $spacing-lg;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+
+    .icon {
+      font-size: $font-size-xl;
+    }
+  }
+}
+
+.venues-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: $spacing-xl;
+  margin-bottom: $spacing-2xl;
+
+  @include respond-to('mobile') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.venue-card {
+  @include card;
+  padding: 0;
+  overflow: hidden;
+  transition: all $transition-base;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: $shadow-xl, $shadow-gold;
+  }
+}
+
+.venue-image {
+  height: 200px;
+  background: linear-gradient(135deg, $color-royal-blue, $color-deep-navy);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+
+  .venue-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba($color-deep-navy, 0.8);
+    @include flex-center;
+    opacity: 0;
+    transition: all $transition-base;
+  }
+
+  &:hover .venue-overlay {
+    opacity: 1;
+  }
+
+  .btn-view {
+    @include button-base;
+    background: $color-metallic-gold;
+    color: $color-deep-navy;
+    padding: $spacing-sm $spacing-xl;
+    transform: translateY(20px);
+    transition: all $transition-base;
+  }
+
+  &:hover .btn-view {
+    transform: translateY(0);
+  }
+}
+
+.venue-info {
+  padding: $spacing-lg;
+}
+
+.venue-name {
+  font-size: $font-size-xl;
+  font-weight: 700;
+  color: $color-white;
+  margin: 0 0 $spacing-md 0;
+  cursor: pointer;
+  transition: color $transition-base;
+
+  &:hover {
+    color: $color-metallic-gold;
+  }
+}
+
+.venue-meta {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  margin-bottom: $spacing-lg;
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    color: $color-gray-light;
+    font-size: $font-size-sm;
+
+    .icon {
+      font-size: $font-size-base;
+    }
+  }
+}
+
+.venue-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+  padding: $spacing-md;
+  @include glassmorphism(0.05);
+  border-radius: $radius-lg;
+}
+
+.stat-item {
+  text-align: center;
+
+  .stat-value {
+    display: block;
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $color-metallic-gold;
+  }
+
+  .stat-label {
+    display: block;
+    font-size: $font-size-xs;
+    color: $color-gray-medium;
+    margin-top: $spacing-xs;
+  }
+}
+
+.venue-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-sm;
+}
+
+.btn-action {
+  @include button-base;
+  padding: $spacing-sm $spacing-md;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-xs;
+  border: 2px solid rgba($color-metallic-gold, 0.2);
+  background: transparent;
+  color: $color-gray-light;
+  font-size: $font-size-xs;
+
+  .icon {
+    font-size: $font-size-lg;
+  }
+
+  .btn-text {
+    font-size: $font-size-xs;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: $color-metallic-gold;
+    background: rgba($color-metallic-gold, 0.1);
+    color: $color-metallic-gold;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-delete {
+  &:hover:not(:disabled) {
+    border-color: $color-error;
+    background: rgba($color-error, 0.1);
+    color: $color-error;
+  }
+}
+
+.spinner-small {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba($color-metallic-gold, 0.2);
+  border-top-color: $color-metallic-gold;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+// Summary Stats
+.summary-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: $spacing-lg;
+  margin-top: $spacing-2xl;
+}
+
+.summary-card {
+  @include card;
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  border: 2px solid rgba($color-metallic-gold, 0.2);
+
+  .summary-icon {
+    font-size: 3rem;
+    width: 80px;
+    height: 80px;
+    @include flex-center;
+    @include glassmorphism(0.1);
+    border-radius: $radius-lg;
+  }
+
+  .summary-content {
+    flex: 1;
+
+    h4 {
+      color: $color-gray-medium;
+      font-size: $font-size-sm;
+      font-weight: 600;
+      margin: 0 0 $spacing-xs 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .summary-value {
+      color: $color-metallic-gold;
+      font-size: $font-size-3xl;
+      font-weight: 700;
+      margin: 0;
+    }
+  }
+}

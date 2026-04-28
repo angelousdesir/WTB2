@@ -2,12 +2,40 @@
   <div class="upload-card">
     <!-- Header -->
     <div class="card-header">
+      <button class="btn-back" routerLink="/my-venues">
+        <span class="icon">←</span>
+        Back to My Venues
+      </button>
       <h1>Upload Menu</h1>
-      <p>Parse your menu and add items automatically</p>
+      <p>Parse your menu automatically or enter items manually</p>
     </div>
 
-    <!-- Step 1: Select Venue & Upload Image -->
-    <div *ngIf="uploadStep === 'select'" class="upload-form">
+    <!-- Mode Toggle -->
+    <div class="mode-toggle" *ngIf="uploadStep === 'select'">
+      <button 
+        class="mode-btn" 
+        [class.active]="uploadMode === 'auto'"
+        (click)="switchToAutoMode()">
+        <span class="icon">🤖</span>
+        Auto Parse (Image/PDF)
+      </button>
+      <button 
+        class="mode-btn" 
+        [class.active]="uploadMode === 'manual'"
+        (click)="switchToManualMode()">
+        <span class="icon">✍️</span>
+        Manual Entry
+      </button>
+    </div>
+
+    <!-- Error Alert -->
+    <div class="error-alert" *ngIf="errorMessage">
+      <span class="error-icon">⚠️</span>
+      {{ errorMessage }}
+    </div>
+
+    <!-- Auto Parse Mode -->
+    <div *ngIf="uploadMode === 'auto' && uploadStep === 'select'" class="upload-form">
       <form [formGroup]="menuForm">
         <!-- Venue Selection -->
         <div class="form-group">
@@ -20,21 +48,21 @@
           </select>
         </div>
 
-        <!-- Menu Image Upload -->
+        <!-- Menu File Upload -->
         <div class="form-group">
-          <label>Upload Menu Image *</label>
+          <label>Upload Menu File *</label>
           
           <div class="upload-area" *ngIf="!selectedMenuFile">
             <input 
               type="file" 
               id="menuInput" 
-              accept="image/*" 
+              accept="image/*,application/pdf" 
               (change)="onMenuFileSelect($event)"
               hidden>
             <label for="menuInput" class="upload-label">
               <div class="upload-icon">📋</div>
-              <p class="upload-text">Click to upload menu image</p>
-              <p class="upload-hint">Supports JPG, PNG (Max 10MB)</p>
+              <p class="upload-text">Click to upload menu</p>
+              <p class="upload-hint">Image (JPG, PNG) or PDF (Max 10MB)</p>
             </label>
           </div>
 
@@ -44,6 +72,7 @@
               <div class="file-details">
                 <p class="file-name">{{ selectedMenuFile.name }}</p>
                 <p class="file-size">{{ (selectedMenuFile.size / 1024 / 1024).toFixed(2) }} MB</p>
+                <p class="file-type">{{ selectedMenuFile.type || 'Unknown type' }}</p>
               </div>
             </div>
             <button type="button" class="btn-remove" (click)="selectedMenuFile = null">Remove</button>
@@ -56,7 +85,10 @@
           class="btn-parse" 
           (click)="parseMenu()"
           [disabled]="parsing || !selectedMenuFile || !menuForm.get('venue_id')?.value">
-          <span *ngIf="!parsing">Parse Menu with AI</span>
+          <span *ngIf="!parsing">
+            <span class="icon">🔍</span>
+            Parse Menu with AI
+          </span>
           <div *ngIf="parsing" class="btn-loading">
             <div class="spinner"></div>
             <span>Parsing menu...</span>
@@ -68,15 +100,101 @@
       <div class="instructions">
         <h3>📸 Tips for best results:</h3>
         <ul>
-          <li>Use a clear, well-lit photo of the menu</li>
+          <li>Use a clear, well-lit photo or high-quality PDF</li>
           <li>Ensure text is readable and not blurry</li>
           <li>Avoid glare or shadows on the menu</li>
           <li>Include prices if available</li>
+          <li>PDFs work best with text-based menus (not scanned images)</li>
         </ul>
       </div>
     </div>
 
-    <!-- Step 2: Preview & Edit -->
+    <!-- Manual Entry Mode -->
+    <div *ngIf="uploadMode === 'manual' && uploadStep === 'select'" class="manual-entry-form">
+      <form [formGroup]="manualEntryForm">
+        <!-- Venue Selection -->
+        <div class="form-group">
+          <label>Select Venue *</label>
+          <select formControlName="venue_id" class="form-select">
+            <option value="">Choose a venue</option>
+            <option *ngFor="let venue of venues" [value]="venue.id">
+              {{ venue.name }} - {{ venue.city }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Menu Items -->
+        <div class="menu-items-section">
+          <div class="section-header">
+            <h3>Menu Items</h3>
+            <button type="button" class="btn-add-item" (click)="addMenuItem()">
+              <span class="icon">+</span>
+              Add Item
+            </button>
+          </div>
+
+          <div *ngIf="menuItems.length === 0" class="empty-items">
+            <p>No menu items yet. Click "Add Item" to start.</p>
+          </div>
+
+          <div formArrayName="items" class="items-list">
+            <div *ngFor="let item of menuItems.controls; let i = index" [formGroupName]="i" class="menu-item-form">
+              <div class="item-header">
+                <span class="item-number">Item {{ i + 1 }}</span>
+                <button type="button" class="btn-remove-item" (click)="removeMenuItem(i)">
+                  <span>🗑️</span>
+                </button>
+              </div>
+
+              <div class="item-fields">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Name *</label>
+                    <input type="text" formControlName="name" placeholder="Grilled Salmon">
+                  </div>
+
+                  <div class="form-group form-group-small">
+                    <label>Price</label>
+                    <input type="text" formControlName="price" placeholder="12.99">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Description</label>
+                  <input type="text" formControlName="description" placeholder="Fresh Atlantic salmon with lemon butter sauce">
+                </div>
+
+                <div class="form-group">
+                  <label>Category *</label>
+                  <select formControlName="category" class="form-select">
+                    <option value="">Select category</option>
+                    <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Save Button -->
+        <button 
+          type="button" 
+          class="btn-save-manual" 
+          (click)="saveManualMenuItems()"
+          [disabled]="loading || manualEntryForm.invalid || menuItems.length === 0">
+          <span *ngIf="!loading">
+            <span class="icon">💾</span>
+            Save {{ menuItems.length }} Item{{ menuItems.length !== 1 ? 's' : '' }}
+          </span>
+          <div *ngIf="loading" class="btn-loading">
+            <div class="spinner"></div>
+            <span>Saving...</span>
+          </div>
+        </button>
+      </form>
+    </div>
+
+    <!-- Preview (for auto parse) -->
     <div *ngIf="uploadStep === 'preview'" class="preview-section">
       <div class="preview-header">
         <h2>Review Parsed Items ({{ parsedItems.length }})</h2>
@@ -111,11 +229,11 @@
       </div>
     </div>
 
-    <!-- Step 3: Success -->
+    <!-- Success -->
     <div *ngIf="uploadStep === 'success'" class="success-section">
       <div class="success-icon">✅</div>
       <h2>Menu Uploaded Successfully!</h2>
-      <p>{{ parsedItems.length }} items have been added to your venue.</p>
+      <p>{{ parsedItems.length || menuItems.length }} items have been added to your venue.</p>
       <div class="spinner"></div>
       <p class="redirect-text">Redirecting to venue page...</p>
     </div>

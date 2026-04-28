@@ -3,3 +3,33 @@
 
 // Use same styles as login
 @import '../login/login.component.scss';
+
+.form-hint {
+  font-size: $font-size-sm;
+  color: $color-gray-medium;
+  margin-top: $spacing-xs;
+}
+
+.form-select {
+  padding: $spacing-md;
+  background: rgba($color-royal-blue, 0.1);
+  border: 2px solid rgba($color-metallic-gold, 0.2);
+  border-radius: $radius-lg;
+  color: $color-white;
+  font-size: $font-size-base;
+  font-family: $font-family-primary;
+  transition: all $transition-base;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: $color-metallic-gold;
+    box-shadow: 0 0 0 3px rgba($color-metallic-gold, 0.1);
+  }
+
+  option {
+    background: $color-deep-navy;
+    color: $color-white;
+    padding: $spacing-md;
+  }
+}

@@ -1,0 +1,130 @@
+<div class="my-venues-container">
+  <div class="content-wrapper">
+    <!-- Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <h1>My Venues</h1>
+        <p>Manage your restaurants and bars</p>
+      </div>
+      <button class="btn-add-venue" (click)="navigateToAddVenue()">
+        <span class="icon">+</span>
+        Add New Venue
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading your venues...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && venues.length === 0" class="empty-state">
+      <div class="empty-icon">🏪</div>
+      <h2>No venues yet</h2>
+      <p>Create your first venue to start managing menus and reviews</p>
+      <button class="btn-primary" (click)="navigateToAddVenue()">
+        <span class="icon">+</span>
+        Create Your First Venue
+      </button>
+    </div>
+
+    <!-- Venues Grid -->
+    <div *ngIf="!loading && venues.length > 0" class="venues-grid">
+      <div *ngFor="let venue of venues" class="venue-card">
+        <!-- Venue Image -->
+        <div 
+          class="venue-image" 
+          [style.background-image]="venue.image_url ? 'url(' + venue.image_url + ')' : 'none'"
+          (click)="navigateToVenue(venue.id)">
+          <div class="venue-overlay">
+            <button class="btn-view">View Details</button>
+          </div>
+        </div>
+
+        <!-- Venue Info -->
+        <div class="venue-info">
+          <h3 class="venue-name" (click)="navigateToVenue(venue.id)">{{ venue.name }}</h3>
+          
+          <div class="venue-meta">
+            <div class="meta-item">
+              <span class="icon">📍</span>
+              <span>{{ venue.city }}, {{ venue.state }}</span>
+            </div>
+            <div class="meta-item" *ngIf="venue.cuisine_type">
+              <span class="icon">🍽️</span>
+              <span>{{ venue.cuisine_type }}</span>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="venue-stats">
+            <div class="stat-item">
+              <span class="stat-value">{{ venue.average_rating.toFixed(1) }}</span>
+              <span class="stat-label">⭐ Rating</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">{{ venue.total_reviews }}</span>
+              <span class="stat-label">Reviews</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">{{ getMenuCount(venue.id) }}</span>
+              <span class="stat-label">Menu Items</span>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="venue-actions">
+            <button 
+              class="btn-action btn-menu" 
+              (click)="navigateToUploadMenu(venue.id)"
+              title="Upload menu">
+              <span class="icon">📋</span>
+              <span class="btn-text">Menu</span>
+            </button>
+            <button 
+              class="btn-action btn-view-venue" 
+              (click)="navigateToVenue(venue.id)"
+              title="View venue">
+              <span class="icon">👁️</span>
+              <span class="btn-text">View</span>
+            </button>
+            <button 
+              class="btn-action btn-delete" 
+              (click)="deleteVenue(venue, $event)"
+              [disabled]="deletingVenueId === venue.id"
+              title="Delete venue">
+              <span *ngIf="deletingVenueId !== venue.id" class="icon">🗑️</span>
+              <div *ngIf="deletingVenueId === venue.id" class="spinner-small"></div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+   <!-- Summary Stats -->
+<div *ngIf="!loading && venues.length > 0" class="summary-stats">
+  <div class="summary-card">
+    <div class="summary-icon">🏪</div>
+    <div class="summary-content">
+      <h4>Total Venues</h4>
+      <p class="summary-value">{{ totalVenues }}</p>
+    </div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-icon">⭐</div>
+    <div class="summary-content">
+      <h4>Average Rating</h4>
+      <p class="summary-value">{{ averageRating }}</p>
+    </div>
+  </div>
+  <div class="summary-card">
+    <div class="summary-icon">💬</div>
+    <div class="summary-content">
+      <h4>Total Reviews</h4>
+      <p class="summary-value">{{ totalReviews }}</p>
+    </div>
+  </div>
+</div>
+  </div>
+</div>

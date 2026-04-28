@@ -25,7 +25,8 @@ export class RegisterComponent {
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]]
+      confirmPassword: ['', [Validators.required]],
+      role: ['customer', [Validators.required]]
     }, { validators: this.passwordMatchValidator });
   }
 
@@ -41,6 +42,9 @@ export class RegisterComponent {
 
   async onSubmit(): Promise<void> {
     if (this.registerForm.invalid) {
+      Object.keys(this.registerForm.controls).forEach(key => {
+        this.registerForm.get(key)?.markAsTouched();
+      });
       return;
     }
 
@@ -48,9 +52,14 @@ export class RegisterComponent {
     this.errorMessage = '';
 
     try {
-      const { email, password, username } = this.registerForm.value;
-      await this.authService.signUp(email, password, username);
+      const { email, password, username, role } = this.registerForm.value;
+      console.log('Registering user:', { email, username, role });
+      
+      await this.authService.signUp(email, password, username, role);
+      
+      // Success - navigation handled by auth service
     } catch (error: any) {
+      console.error('Registration error:', error);
       this.errorMessage = error.message || 'Registration failed. Please try again.';
     } finally {
       this.loading = false;

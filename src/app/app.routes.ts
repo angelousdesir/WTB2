@@ -3,7 +3,6 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
 
-// Auth guard function
 export const authGuard = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
@@ -16,7 +15,7 @@ export const authGuard = () => {
 };
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { 
     path: 'login', 
     loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent)
@@ -72,8 +71,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/menu-upload/menu-upload.component').then(m => m.MenuUploadComponent),
     canActivate: [authGuard]
   },
-  { path: '**', redirectTo: '/home' }
-],
+  { 
+  path: 'my-venues', 
+  loadComponent: () => import('./features/my-venues/my-venues.component').then(m => m.MyVenuesComponent),
+  canActivate: [authGuard]
+  },
   // NEW: Add Venue Route
   { 
     path: 'add-venue', 

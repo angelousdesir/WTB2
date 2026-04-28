@@ -22,6 +22,19 @@
       </div>
     </div>
 
+    <!-- Login Prompt for Non-Authenticated Users -->
+    <div class="login-prompt" *ngIf="shouldShowLoginPrompt">
+      <div class="prompt-content">
+        <div class="prompt-icon">🔒</div>
+        <h3>Sign in to see all venues</h3>
+        <p>You're viewing the top 5 venues. Sign in to explore hundreds more!</p>
+        <div class="prompt-actions">
+          <button class="btn-login" routerLink="/login">Sign In</button>
+          <button class="btn-register" routerLink="/register">Create Account</button>
+        </div>
+      </div>
+    </div>
+
     <div class="content-grid">
       <!-- Venues List -->
       <div class="venues-section">
@@ -67,6 +80,53 @@
       </aside>
     </div>
 
+    <!-- Role Upgrade Modal -->
+    <div class="modal-overlay" *ngIf="showRoleUpgradePrompt" (click)="cancelRoleUpgrade()">
+      <div class="upgrade-modal" (click)="$event.stopPropagation()">
+        <div class="upgrade-header">
+          <h2>🏪 Become a Venue Owner</h2>
+          <button class="modal-close" (click)="cancelRoleUpgrade()">✕</button>
+        </div>
+        
+        <div class="upgrade-content">
+          <p class="upgrade-message">
+            To add and manage venues, you need to upgrade your account to a <strong>Venue Owner</strong> account.
+          </p>
+          
+          <div class="upgrade-benefits">
+            <h3>As a Venue Owner, you can:</h3>
+            <ul>
+              <li>✓ Add your restaurant or bar to the platform</li>
+              <li>✓ Upload and manage your menu</li>
+              <li>✓ View customer reviews and ratings</li>
+              <li>✓ Track your venue's performance</li>
+              <li>✓ Respond to customer feedback</li>
+            </ul>
+          </div>
+
+          <p class="upgrade-note">
+            Don't worry - you'll still be able to review and rate other venues!
+          </p>
+        </div>
+
+        <div class="upgrade-actions">
+          <button class="btn-cancel" (click)="cancelRoleUpgrade()" [disabled]="upgradingRole">
+            Maybe Later
+          </button>
+          <button class="btn-upgrade" (click)="upgradeToVenueOwner()" [disabled]="upgradingRole">
+            <span *ngIf="!upgradingRole">
+              <span class="icon">🚀</span>
+              Upgrade to Venue Owner
+            </span>
+            <div *ngIf="upgradingRole" class="btn-loading">
+              <div class="spinner"></div>
+              <span>Upgrading...</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Venue Details Modal -->
     <div class="modal-overlay" *ngIf="selectedVenue" (click)="clearSelection()">
       <div class="modal-content" (click)="$event.stopPropagation()">
@@ -77,6 +137,13 @@
           <div class="venue-header-image" [style.background-image]="selectedVenue.image_url ? 'url(' + selectedVenue.image_url + ')' : 'none'"></div>
           <div class="venue-header-info">
             <h2>{{ selectedVenue.name }}</h2>
+             <button 
+                *ngIf="canEditVenue(selectedVenue)" 
+                class="btn-edit-venue"
+                (click)="openEditModal()">
+                <span class="icon">✏️</span>
+                Edit Venue
+             </button>
             <div class="venue-rating-large">
               <div class="stars">
                 <span *ngFor="let s of [1,2,3,4,5]" class="star" [class.filled]="s <= selectedVenue.average_rating">⭐</span>
@@ -151,4 +218,160 @@
       </div>
     </div>
   </div>
+
+  <!-- Edit Venue Modal -->
+<div class="modal-overlay" *ngIf="showEditModal" (click)="closeEditModal()">
+  <div class="edit-venue-modal" (click)="$event.stopPropagation()">
+    <div class="edit-header">
+      <h2>✏️ Edit Venue</h2>
+      <button class="modal-close" (click)="closeEditModal()">✕</button>
+    </div>
+
+    <form [formGroup]="editVenueForm" (submit)="saveVenueChanges()" class="edit-form">
+      <!-- Venue Image -->
+      <div class="form-section">
+        <label class="section-label">Venue Photo</label>
+        
+        <div class="image-preview-container" *ngIf="editImagePreview">
+          <img [src]="editImagePreview" alt="Venue preview" class="image-preview">
+          <button type="button" class="remove-image-btn" (click)="removeEditImage()">
+            <span>✕</span>
+          </button>
+        </div>
+
+        <div class="image-upload-section" *ngIf="!editImagePreview">
+          <input 
+            type="file" 
+            id="editImageInput" 
+            accept="image/*" 
+            (change)="onEditImageSelect($event)"
+            hidden>
+          <label for="editImageInput" class="upload-label-small">
+            <span class="icon">📷</span>
+            Choose new image
+          </label>
+        </div>
+
+        <button 
+          type="button" 
+          *ngIf="editImagePreview && editImagePreview === selectedVenue?.image_url"
+          class="change-image-btn"
+          (click)="editImagePreview = null">
+          Change Image
+        </button>
+      </div>
+
+      <!-- Basic Info -->
+      <div class="form-row-edit">
+        <div class="form-group">
+          <label for="edit-name">Venue Name *</label>
+          <input
+            type="text"
+            id="edit-name"
+            formControlName="name"
+            [class.error]="hasEditError('name')">
+          <span class="error-message" *ngIf="hasEditError('name', 'required')">Required</span>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-cuisine">Cuisine Type</label>
+          <select id="edit-cuisine" formControlName="cuisine_type" class="form-select">
+            <option value="">Select cuisine</option>
+            <option *ngFor="let cuisine of cuisineTypes" [value]="cuisine">{{ cuisine }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label for="edit-description">Description</label>
+        <textarea
+          id="edit-description"
+          formControlName="description"
+          rows="3"
+          [class.error]="hasEditError('description')">
+        </textarea>
+        <span class="char-count">{{ editVenueForm.get('description')?.value?.length || 0 }} / 500</span>
+      </div>
+
+      <!-- Address -->
+      <div class="form-group">
+        <label for="edit-address">Address *</label>
+        <input
+          type="text"
+          id="edit-address"
+          formControlName="address"
+          [class.error]="hasEditError('address')">
+      </div>
+
+      <!-- City, State, Zip -->
+      <div class="form-row-edit">
+        <div class="form-group">
+          <label for="edit-city">City *</label>
+          <input
+            type="text"
+            id="edit-city"
+            formControlName="city"
+            [class.error]="hasEditError('city')">
+        </div>
+
+        <div class="form-group form-group-small">
+          <label for="edit-state">State *</label>
+          <select id="edit-state" formControlName="state" class="form-select">
+            <option value="">State</option>
+            <option *ngFor="let state of states" [value]="state">{{ state }}</option>
+          </select>
+        </div>
+
+        <div class="form-group form-group-small">
+          <label for="edit-zip">ZIP *</label>
+          <input
+            type="text"
+            id="edit-zip"
+            formControlName="zip_code"
+            [class.error]="hasEditError('zip_code')">
+        </div>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="form-row-edit">
+        <div class="form-group">
+          <label for="edit-phone">Phone</label>
+          <input
+            type="tel"
+            id="edit-phone"
+            formControlName="phone"
+            [class.error]="hasEditError('phone')">
+        </div>
+
+        <div class="form-group">
+          <label for="edit-website">Website</label>
+          <input
+            type="url"
+            id="edit-website"
+            formControlName="website"
+            [class.error]="hasEditError('website')">
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="edit-actions">
+        <button type="button" class="btn-cancel" (click)="closeEditModal()" [disabled]="savingVenue">
+          Cancel
+        </button>
+        <button type="submit" class="btn-save" [disabled]="savingVenue || editVenueForm.invalid">
+          <span *ngIf="!savingVenue">
+            <span class="icon">💾</span>
+            Save Changes
+          </span>
+          <div *ngIf="savingVenue" class="btn-loading">
+            <div class="spinner"></div>
+            <span>Saving...</span>
+          </div>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
 </div>

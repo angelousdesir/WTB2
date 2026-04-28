@@ -61,6 +61,16 @@
         </span>
       </div>
 
+      <!-- Role Selection -->
+      <div class="form-group">
+        <label for="role">I am a *</label>
+        <select id="role" formControlName="role" class="form-select">
+          <option value="customer">Customer - I want to review food & drinks</option>
+          <option value="owner">Venue Owner - I want to manage my restaurant/bar</option>
+        </select>
+        <p class="form-hint">You can change this later in your profile</p>
+      </div>
+
       <div class="error-alert" *ngIf="errorMessage">
         {{ errorMessage }}
       </div>

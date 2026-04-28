@@ -14,7 +14,6 @@ export class MenuParserService {
    */
   async parseMenuImage(imageFile: File): Promise<ParsedMenuItem[]> {
     try {
-      // Perform OCR on the image
       const result = await Tesseract.recognize(imageFile, 'eng', {
         logger: m => console.log(m)
       });
@@ -24,6 +23,62 @@ export class MenuParserService {
     } catch (error) {
       throw new Error('Failed to parse menu image');
     }
+  }
+
+  /**
+   * Parse PDF menu
+   */
+  async parsePdfMenu(pdfFile: File): Promise<ParsedMenuItem[]> {
+    try {
+      // Convert PDF pages to images and use OCR
+      const arrayBuffer = await pdfFile.arrayBuffer();
+      const uint8Array = new Uint8Array(arrayBuffer);
+      
+      // For now, we'll use a simple text extraction approach
+      // You could enhance this with a library like pdf.js for better extraction
+      const text = await this.extractTextFromPdf(uint8Array);
+      return this.parseMenuText(text);
+    } catch (error) {
+      console.error('PDF parsing error:', error);
+      throw new Error('Failed to parse PDF menu. Please try uploading an image or entering items manually.');
+    }
+  }
+
+  /**
+   * Extract text from PDF (basic implementation)
+   * For production, consider using pdf.js library
+   */
+  private async extractTextFromPdf(pdfData: Uint8Array): Promise<string> {
+    // This is a simplified version
+    // For full PDF support, you would use pdf.js:
+    // npm install pdfjs-dist
+    
+    try {
+      // Convert to blob and use FileReader as fallback
+      const blob = new Blob([pdfData], { type: 'application/pdf' });
+      const text = await this.convertPdfToText(blob);
+      return text;
+    } catch (error) {
+      throw new Error('PDF text extraction failed. Please try manual entry.');
+    }
+  }
+
+  /**
+   * Convert PDF to text (placeholder - requires pdf.js for full implementation)
+   */
+  private async convertPdfToText(blob: Blob): Promise<string> {
+    // This is a basic implementation
+    // For production, implement proper PDF.js integration
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const text = reader.result as string;
+        // Basic text extraction (very limited)
+        resolve(text || '');
+      };
+      reader.onerror = () => reject(new Error('Failed to read PDF'));
+      reader.readAsText(blob);
+    });
   }
 
   /**
@@ -37,13 +92,11 @@ export class MenuParserService {
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
 
-      // Detect category headers (usually all caps or followed by divider)
       if (this.isCategoryHeader(line)) {
         currentCategory = line;
         continue;
       }
 
-      // Try to extract item name, description, and price
       const parsed = this.parseMenuItem(line);
       if (parsed) {
         items.push({
@@ -60,7 +113,6 @@ export class MenuParserService {
    * Check if line is a category header
    */
   private isCategoryHeader(line: string): boolean {
-    // Headers are usually short, all caps, or contain certain keywords
     const categoryKeywords = ['appetizers', 'entrees', 'mains', 'desserts', 'drinks', 'beverages', 'starters', 'salads', 'soups'];
     const isAllCaps = line === line.toUpperCase() && line.length < 30;
     const containsKeyword = categoryKeywords.some(keyword => line.toLowerCase().includes(keyword));
@@ -72,20 +124,15 @@ export class MenuParserService {
    * Parse individual menu item line
    */
   private parseMenuItem(line: string): ParsedMenuItem | null {
-    // Price pattern: $X.XX or X.XX
     const pricePattern = /\$?(\d+\.\d{2})/;
     const priceMatch = line.match(pricePattern);
 
     if (!priceMatch) {
-      return null; // Skip lines without prices
+      return null;
     }
 
     const price = parseFloat(priceMatch[1]);
-    
-    // Remove price from line to get name and description
     const nameAndDesc = line.replace(pricePattern, '').trim();
-    
-    // Split by common delimiters
     const parts = nameAndDesc.split(/[-–—]/);
     
     if (parts.length >= 2) {
@@ -141,7 +188,7 @@ export class MenuParserService {
     return data as MenuItem[];
   }
 
- /**
+  /**
    * Get top rated menu items globally with venue information
    */
   async getTopMenuItems(limit: number = 5): Promise<MenuItem[]> {
@@ -156,7 +203,6 @@ export class MenuParserService {
 
     if (error) throw error;
     
-    // Transform the data to match our MenuItem interface
     return (data || []).map((item: any) => ({
       ...item,
       venue: item.venue ? {
