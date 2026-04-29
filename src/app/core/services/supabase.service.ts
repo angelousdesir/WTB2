@@ -30,21 +30,29 @@ export class SupabaseService {
    * Upload file to Supabase storage bucket
    */
   async uploadFile(bucket: string, path: string, file: File): Promise<string> {
+    console.log(`Uploading file to bucket: ${bucket}, path: ${path}`);
+    
     const { data, error } = await this.supabase.storage
       .from(bucket)
       .upload(path, file, {
         cacheControl: '3600',
-        upsert: false
+        upsert: true // Changed to true to allow overwriting
       });
 
     if (error) {
+      console.error('Upload error:', error);
       throw error;
     }
 
+    console.log('Upload successful, data:', data);
+
+    // Get public URL
     const { data: publicUrlData } = this.supabase.storage
       .from(bucket)
       .getPublicUrl(data.path);
 
+    console.log('Public URL:', publicUrlData.publicUrl);
+    
     return publicUrlData.publicUrl;
   }
 

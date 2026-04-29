@@ -181,7 +181,7 @@ async signUp(email: string, password: string, username: string, role: 'customer'
     // Check if email confirmation is required
     if (authData.session) {
       console.log('User signed in automatically');
-      this.router.navigate(['/home']);
+      this.router.navigate(['/dashboard']);
     } else {
       alert('Account created! Please check your email to confirm your account.');
       this.router.navigate(['/login']);
@@ -231,7 +231,7 @@ async signIn(email: string, password: string): Promise<void> {
       throw new Error('Failed to load user profile. Please contact support.');
     }
 
-    this.router.navigate(['/home']);
+    this.router.navigate(['/dashboard']);
   } catch (error: any) {
     console.error('Sign in failed:', error);
     throw new Error(error.message || 'Sign in failed. Please try again.');

@@ -638,3 +638,68 @@
     margin-top: $spacing-md;
   }
 }
+
+// Manual Item Image Upload
+.item-image-upload {
+  margin-bottom: $spacing-md;
+}
+
+.upload-label-small {
+  @include button-base;
+  background: rgba($color-royal-blue, 0.2);
+  border: 2px dashed $color-metallic-gold;
+  color: $color-metallic-gold;
+  padding: $spacing-md $spacing-lg;
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+  font-size: $font-size-sm;
+  transition: all $transition-base;
+
+  &:hover {
+    background: rgba($color-metallic-gold, 0.1);
+    border-style: solid;
+  }
+
+  .icon {
+    font-size: $font-size-lg;
+  }
+}
+
+.item-image-preview {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: $spacing-md;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  border: 2px solid $color-metallic-gold;
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .btn-remove-image {
+    position: absolute;
+    top: $spacing-sm;
+    right: $spacing-sm;
+    width: 28px;
+    height: 28px;
+    border-radius: $radius-full;
+    background: rgba($color-error, 0.9);
+    border: none;
+    color: $color-white;
+    cursor: pointer;
+    @include flex-center;
+    transition: all $transition-base;
+    font-size: $font-size-sm;
+
+    &:hover {
+      background: $color-error;
+      transform: scale(1.1);
+    }
+  }
+}

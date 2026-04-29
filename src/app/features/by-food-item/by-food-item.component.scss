@@ -391,3 +391,430 @@
     }
   }
 }
+
+
+// Item Actions
+.item-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-sm;
+
+  .item-name {
+    flex: 1;
+  }
+
+  .item-actions {
+    display: flex;
+    gap: $spacing-xs;
+    opacity: 0;
+    transition: opacity $transition-base;
+  }
+}
+
+.menu-item-card:hover .item-actions {
+  opacity: 1;
+}
+
+.btn-edit-item,
+.btn-delete-item {
+  @include button-base;
+  background: transparent;
+  border: none;
+  padding: $spacing-xs;
+  font-size: $font-size-base;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-sm;
+  transition: all $transition-base;
+  flex-shrink: 0;
+}
+
+.btn-edit-item {
+  color: $color-soft-amber;
+
+  &:hover {
+    background: rgba($color-soft-amber, 0.2);
+  }
+}
+
+.btn-delete-item {
+  color: $color-error;
+
+  &:hover {
+    background: rgba($color-error, 0.2);
+  }
+}
+
+.item-venue {
+  cursor: pointer;
+  transition: all $transition-base;
+  padding: $spacing-xs;
+  border-radius: $radius-sm;
+  margin: -$spacing-xs;
+
+  &:hover {
+    background: rgba($color-metallic-gold, 0.1);
+
+    .venue-name {
+      color: $color-metallic-gold;
+    }
+  }
+
+  .venue-info {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.availability-badge {
+  display: inline-block;
+  background: rgba($color-error, 0.2);
+  color: $color-error;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: 600;
+}
+
+// Modal Styles
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  @include flex-center;
+  z-index: $z-modal;
+  padding: $spacing-xl;
+  animation: fadeIn 0.3s ease-out;
+  overflow-y: auto;
+}
+
+.edit-menu-item-modal {
+  @include card;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease-out;
+  padding: 0;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.edit-header {
+  padding: $spacing-xl;
+  border-bottom: 2px solid rgba($color-metallic-gold, 0.2);
+  position: relative;
+
+  h2 {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $color-metallic-gold;
+    margin: 0;
+    padding-right: 40px;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: $spacing-xl;
+    right: $spacing-xl;
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-full;
+    background: rgba($color-error, 0.2);
+    border: 2px solid $color-error;
+    color: $color-error;
+    font-size: $font-size-xl;
+    cursor: pointer;
+    @include flex-center;
+    transition: all $transition-base;
+
+    &:hover {
+      background: $color-error;
+      color: $color-white;
+    }
+  }
+}
+
+.edit-form {
+  padding: $spacing-xl;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+
+  label {
+    font-weight: 600;
+    color: $color-gray-light;
+    font-size: $font-size-sm;
+  }
+
+  input,
+  textarea,
+  select {
+    padding: $spacing-sm $spacing-md;
+    background: rgba($color-royal-blue, 0.1);
+    border: 2px solid rgba($color-metallic-gold, 0.2);
+    border-radius: $radius-md;
+    color: $color-white;
+    font-size: $font-size-sm;
+    font-family: $font-family-primary;
+    transition: all $transition-base;
+
+    &:focus {
+      outline: none;
+      border-color: $color-metallic-gold;
+    }
+
+    &.error {
+      border-color: $color-error;
+    }
+
+    &::placeholder {
+      color: $color-gray-medium;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  select {
+    cursor: pointer;
+
+    option {
+      background: $color-deep-navy;
+    }
+  }
+}
+
+.error-message {
+  color: $color-error;
+  font-size: $font-size-xs;
+}
+
+.form-row-edit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-md;
+
+  @include respond-to('mobile') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+  padding: $spacing-md;
+  @include glassmorphism(0.05);
+  border-radius: $radius-md;
+  border: 2px solid rgba($color-metallic-gold, 0.2);
+  transition: all $transition-base;
+
+  &:hover {
+    border-color: $color-metallic-gold;
+  }
+
+  .checkbox-input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: $color-metallic-gold;
+  }
+
+  .checkbox-text {
+    color: $color-white;
+    font-size: $font-size-base;
+    flex: 1;
+  }
+}
+
+.edit-actions {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-lg;
+  padding-top: $spacing-lg;
+  border-top: 1px solid rgba($color-metallic-gold, 0.2);
+
+  button {
+    flex: 1;
+  }
+}
+
+.btn-cancel {
+  @include button-base;
+  background: transparent;
+  border: 2px solid $color-gray-medium;
+  color: $color-gray-light;
+
+  &:hover:not(:disabled) {
+    border-color: $color-white;
+    color: $color-white;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-save {
+  @include button-base;
+  @include gold-gradient;
+  color: $color-deep-navy;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+
+  .icon {
+    font-size: $font-size-lg;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: $shadow-gold;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-loading {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+// Menu Item Image Preview in Modal
+.form-section {
+  margin-bottom: $spacing-lg;
+
+  .section-label {
+    display: block;
+    font-weight: 600;
+    color: $color-gray-light;
+    margin-bottom: $spacing-sm;
+    font-size: $font-size-sm;
+  }
+}
+
+.menu-item-image-preview {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto $spacing-md;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  border: 2px solid $color-metallic-gold;
+
+  .image-preview {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .remove-image-btn {
+    position: absolute;
+    top: $spacing-sm;
+    right: $spacing-sm;
+    width: 32px;
+    height: 32px;
+    border-radius: $radius-full;
+    background: rgba($color-error, 0.9);
+    border: none;
+    color: $color-white;
+    cursor: pointer;
+    @include flex-center;
+    transition: all $transition-base;
+
+    &:hover {
+      background: $color-error;
+      transform: scale(1.1);
+    }
+  }
+}
+
+.image-upload-section {
+  text-align: center;
+}
+
+.upload-label-small {
+  @include button-base;
+  background: rgba($color-royal-blue, 0.2);
+  border: 2px dashed $color-metallic-gold;
+  color: $color-metallic-gold;
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+  padding: $spacing-md $spacing-lg;
+
+  &:hover {
+    background: rgba($color-metallic-gold, 0.1);
+  }
+
+  .icon {
+    font-size: $font-size-lg;
+  }
+}
+
+.change-image-btn {
+  @include button-base;
+  background: transparent;
+  border: 2px solid $color-metallic-gold;
+  color: $color-metallic-gold;
+  display: block;
+  margin: $spacing-sm auto 0;
+  padding: $spacing-sm $spacing-lg;
+
+  &:hover {
+    background: rgba($color-metallic-gold, 0.1);
+  }
+}
+
+
+.menu-item-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  .menu-item-image {
+    height: 200px;
+    background: linear-gradient(135deg, $color-royal-blue, $color-deep-navy);
+    background-size: cover;
+    background-position: center;
+    margin: -$spacing-lg -$spacing-lg $spacing-md -$spacing-lg;
+    border-radius: $radius-xl $radius-xl 0 0;
+  }
+
+  .item-header {
+    margin-top: 0;
+  }
+}

@@ -106,3 +106,80 @@
 .review-count {
   color: $color-gray-medium;
 }
+
+.top-item {
+  @include glassmorphism(0.05);
+  padding: $spacing-md;
+  border-radius: $radius-lg;
+  margin-bottom: $spacing-md;
+  display: flex;
+  gap: $spacing-md;
+  transition: all $transition-base;
+  border: 1px solid rgba($color-metallic-gold, 0.1);
+
+  &:hover {
+    border-color: $color-metallic-gold;
+    transform: translateX(4px);
+  }
+
+  .item-rank {
+    @include flex-center;
+    width: 32px;
+    height: 32px;
+    background: $color-metallic-gold;
+    color: $color-deep-navy;
+    border-radius: $radius-full;
+    font-weight: 700;
+    font-size: $font-size-base;
+    flex-shrink: 0;
+  }
+
+  .item-image {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, $color-royal-blue, $color-deep-navy);
+    background-size: cover;
+    background-position: center;
+    border-radius: $radius-md;
+    flex-shrink: 0;
+  }
+
+  .item-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .item-name {
+    font-size: $font-size-base;
+    font-weight: 600;
+    color: $color-white;
+    margin: 0 0 $spacing-xs 0;
+    @include truncate(1);
+  }
+
+  .item-venue {
+    font-size: $font-size-xs;
+    color: $color-gray-medium;
+    margin: 0 0 $spacing-xs 0;
+    @include truncate(1);
+  }
+
+  .item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  .item-rating {
+    color: $color-metallic-gold;
+    font-size: $font-size-xs;
+    font-weight: 600;
+  }
+
+  .item-price {
+    color: $color-soft-amber;
+    font-size: $font-size-xs;
+    font-weight: 600;
+  }
+}

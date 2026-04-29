@@ -1,0 +1,148 @@
+<div class="dashboard-container">
+  <div class="content-wrapper">
+    <!-- Welcome Header -->
+    <div class="welcome-section">
+      <div class="welcome-content">
+        <h1>{{ greeting }}, {{ userName }}! 👋</h1>
+        <p class="user-role-badge">
+          <span class="role-icon" [ngSwitch]="userRole">
+            <span *ngSwitchCase="'admin'">👑</span>
+            <span *ngSwitchCase="'owner'">🏪</span>
+            <span *ngSwitchDefault>⭐</span>
+          </span>
+          {{ userRole | titlecase }}
+        </p>
+      </div>
+      <div class="welcome-stats">
+        <div class="stat-card" *ngIf="isOwner">
+          <div class="stat-icon">🏢</div>
+          <div class="stat-info">
+            <p class="stat-value">{{ myVenues.length }}</p>
+            <p class="stat-label">My Venues</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading your dashboard...</p>
+    </div>
+
+    <div *ngIf="!loading">
+      <!-- Quick Actions -->
+      <div class="section">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="actions-grid">
+          <button 
+            *ngFor="let action of quickActions" 
+            class="action-card"
+            [style.border-color]="action.color"
+            (click)="navigateTo(action.route)">
+            <div class="action-icon" [style.background]="action.color + '20'">
+              <span>{{ action.icon }}</span>
+            </div>
+            <p class="action-label">{{ action.label }}</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- Owner Actions -->
+      <div class="section" *ngIf="isOwner">
+        <h2 class="section-title">Venue Management</h2>
+        <div class="actions-grid">
+          <button 
+            *ngFor="let action of ownerActions" 
+            class="action-card"
+            [style.border-color]="action.color"
+            (click)="navigateTo(action.route)">
+            <div class="action-icon" [style.background]="action.color + '20'">
+              <span>{{ action.icon }}</span>
+            </div>
+            <p class="action-label">{{ action.label }}</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- My Venues (for owners) -->
+      <div class="section" *ngIf="isOwner && myVenues.length > 0">
+        <div class="section-header">
+          <h2 class="section-title">My Venues</h2>
+          <button class="btn-view-all" routerLink="/my-venues">View All →</button>
+        </div>
+        <div class="venues-preview">
+          <div 
+            *ngFor="let venue of myVenues.slice(0, 3)" 
+            class="venue-preview-card"
+            (click)="navigateToVenue(venue.id)">
+            <div 
+              class="venue-preview-image" 
+              [style.background-image]="venue.image_url ? 'url(' + venue.image_url + ')' : 'none'">
+            </div>
+            <div class="venue-preview-info">
+              <h3>{{ venue.name }}</h3>
+              <p>{{ venue.city }}, {{ venue.state }}</p>
+              <div class="venue-preview-stats">
+                <span>⭐ {{ venue.average_rating.toFixed(1) }}</span>
+                <span>💬 {{ venue.total_reviews }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Venues -->
+      <div class="section">
+        <div class="section-header">
+          <h2 class="section-title">Top Rated Venues</h2>
+          <button class="btn-view-all" routerLink="/by-bar">View All →</button>
+        </div>
+        <div class="venues-preview">
+          <div 
+            *ngFor="let venue of topVenues" 
+            class="venue-preview-card"
+            (click)="navigateToVenue(venue.id)">
+            <div 
+              class="venue-preview-image" 
+              [style.background-image]="venue.image_url ? 'url(' + venue.image_url + ')' : 'none'">
+            </div>
+            <div class="venue-preview-info">
+              <h3>{{ venue.name }}</h3>
+              <p>{{ venue.city }}, {{ venue.state }}</p>
+              <div class="venue-preview-stats">
+                <span>⭐ {{ venue.average_rating.toFixed(1) }}</span>
+                <span>💬 {{ venue.total_reviews }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Getting Started (for new users) -->
+      <div class="section" *ngIf="!isOwner">
+        <h2 class="section-title">Getting Started</h2>
+        <div class="tips-grid">
+          <div class="tip-card">
+            <div class="tip-icon">🔍</div>
+            <h3>Explore Venues</h3>
+            <p>Browse through our collection of restaurants and bars to find your next favorite spot.</p>
+            <button class="btn-tip" routerLink="/by-bar">Browse Venues</button>
+          </div>
+          <div class="tip-card">
+            <div class="tip-icon">⭐</div>
+            <h3>Write Reviews</h3>
+            <p>Share your dining experiences and help others discover great food and drinks.</p>
+            <button class="btn-tip" routerLink="/create-post">Create Post</button>
+          </div>
+          <div class="tip-card">
+            <div class="tip-icon">🏪</div>
+            <h3>Own a Venue?</h3>
+            <p>Upgrade to a venue owner account to manage your restaurant or bar on our platform.</p>
+            <button class="btn-tip" routerLink="/by-bar">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

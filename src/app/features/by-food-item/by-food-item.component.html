@@ -70,44 +70,74 @@
     </div>
 
     <!-- Menu Items Grid -->
-    <div *ngIf="!loading && menuItems.length > 0" class="menu-items-grid">
-      <div *ngFor="let item of menuItems" class="menu-item-card">
-        <div class="item-header">
-          <div class="item-category-badge">
-            {{ item.category || 'Uncategorized' }}
-          </div>
-          <div class="item-rating">
-            <span class="star">⭐</span>
-            <span class="rating-value">{{ item.average_rating.toFixed(1) }}</span>
-          </div>
-        </div>
+<div *ngIf="!loading && menuItems.length > 0" class="menu-items-grid">
+ <div *ngFor="let item of menuItems" class="menu-item-card">
+  <!-- Menu Item Image -->
+  <div 
+    class="menu-item-image" 
+    *ngIf="item.image_url"
+    [style.background-image]="'url(' + item.image_url + ')'">
+  </div>
 
-        <div class="item-content">
-          <h3 class="item-name">{{ item.name }}</h3>
-          <p class="item-description" *ngIf="item.description">
-            {{ item.description }}
-          </p>
+  <div class="item-header">
+    <div class="item-category-badge">
+      {{ item.category || 'Uncategorized' }}
+    </div>
+    <div class="item-rating">
+      <span class="star">⭐</span>
+      <span class="rating-value">{{ item.average_rating.toFixed(1) }}</span>
+    </div>
+  </div>
 
-          <div class="item-meta">
-            <div class="item-venue" *ngIf="item.venue">
-              <span class="venue-icon">🏪</span>
-              <span class="venue-name">{{ item.venue.name }}</span>
-              <span class="venue-location">{{ item.venue.city }}, {{ item.venue.state }}</span>
-            </div>
-            <div class="item-price" *ngIf="item.price">
-              ${{ item.price.toFixed(2) }}
-            </div>
-          </div>
-
-          <div class="item-stats">
-            <span class="stat-item">
-              <span class="stat-icon">💬</span>
-              {{ item.total_reviews }} review{{ item.total_reviews !== 1 ? 's' : '' }}
-            </span>
-          </div>
-        </div>
+  <div class="item-content">
+    <div class="item-title-row">
+      <h3 class="item-name">{{ item.name }}</h3>
+      <!-- Edit/Delete buttons for owners -->
+      <div class="item-actions" *ngIf="authService.isOwner()">
+        <button 
+          class="btn-edit-item" 
+          (click)="openEditMenuItemModal(item)"
+          title="Edit item">
+          ✏️
+        </button>
+        <button 
+          class="btn-delete-item" 
+          (click)="deleteMenuItem(item, $event)"
+          title="Delete item">
+          🗑️
+        </button>
       </div>
     </div>
+
+    <p class="item-description" *ngIf="item.description">
+      {{ item.description }}
+    </p>
+
+    <div class="item-meta">
+      <div class="item-venue" *ngIf="item.venue" (click)="navigateToVenue(item.venue_id)">
+        <span class="venue-icon">🏪</span>
+        <div class="venue-info">
+          <span class="venue-name">{{ item.venue.name }}</span>
+          <span class="venue-location">{{ item.venue.city }}, {{ item.venue.state }}</span>
+        </div>
+      </div>
+      <div class="item-price" *ngIf="item.price">
+        ${{ item.price.toFixed(2) }}
+      </div>
+    </div>
+
+    <div class="item-stats">
+      <span class="stat-item">
+        <span class="stat-icon">💬</span>
+        {{ item.total_reviews }} review{{ item.total_reviews !== 1 ? 's' : '' }}
+      </span>
+      <span class="availability-badge" *ngIf="item.is_available === false">
+        Unavailable
+      </span>
+    </div>
+  </div>
+</div>
+</div>
 
     <!-- Empty State -->
     <div *ngIf="!loading && menuItems.length === 0 && !searchQuery && selectedCategory === 'all'" class="empty-state">
@@ -116,4 +146,142 @@
       <p>Be the first to add items to the menu!</p>
     </div>
   </div>
+
+  <!-- Edit Menu Item Modal -->
+<div class="modal-overlay" *ngIf="showEditMenuItemModal" (click)="closeEditMenuItemModal()">
+  <div class="edit-menu-item-modal" (click)="$event.stopPropagation()">
+    <div class="edit-header">
+      <h2>✏️ Edit Menu Item</h2>
+      <button class="modal-close" (click)="closeEditMenuItemModal()">✕</button>
+    </div>
+
+    <form [formGroup]="editMenuItemForm" (submit)="saveMenuItemChanges()" class="edit-form">
+          <!-- Image Upload Section -->
+  <div class="form-section">
+    <label class="section-label">Item Photo (Optional)</label>
+    
+    <div class="menu-item-image-preview" *ngIf="menuItemImagePreview">
+      <img [src]="menuItemImagePreview" alt="Menu item preview" class="image-preview">
+      <button type="button" class="remove-image-btn" (click)="removeMenuItemImage()">
+        <span>✕</span>
+      </button>
+    </div>
+
+    <div class="image-upload-section" *ngIf="!menuItemImagePreview">
+      <input 
+        type="file" 
+        id="menuItemImageInput" 
+        accept="image/*" 
+        (change)="onMenuItemImageSelect($event)"
+        hidden>
+      <label for="menuItemImageInput" class="upload-label-small">
+        <span class="icon">📷</span>
+        Choose image
+      </label>
+    </div>
+
+    <button 
+      type="button" 
+      *ngIf="menuItemImagePreview && menuItemImagePreview === selectedMenuItem?.image_url"
+      class="change-image-btn"
+      (click)="menuItemImagePreview = null">
+      Change Image
+    </button>
+  </div>
+
+      <!-- Name -->
+      <div class="form-group">
+        <label for="menu-item-name">Item Name *</label>
+        <input
+          type="text"
+          id="menu-item-name"
+          formControlName="name"
+          placeholder="Grilled Salmon"
+          [class.error]="hasMenuItemError('name')">
+        <span class="error-message" *ngIf="hasMenuItemError('name', 'required')">
+          Item name is required
+        </span>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label for="menu-item-description">Description</label>
+        <textarea
+          id="menu-item-description"
+          formControlName="description"
+          rows="3"
+          placeholder="Fresh Atlantic salmon with lemon butter sauce..."
+          [class.error]="hasMenuItemError('description')">
+        </textarea>
+      </div>
+
+      <!-- Price and Category Row -->
+      <div class="form-row-edit">
+        <div class="form-group">
+          <label for="menu-item-price">Price</label>
+          <input
+            type="text"
+            id="menu-item-price"
+            formControlName="price"
+            placeholder="12.99"
+            [class.error]="hasMenuItemError('price')">
+          <span class="error-message" *ngIf="hasMenuItemError('price', 'pattern')">
+            Invalid price format
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="menu-item-category">Category *</label>
+          <select 
+            id="menu-item-category" 
+            formControlName="category" 
+            class="form-select"
+            [class.error]="hasMenuItemError('category')">
+            <option value="">Select category</option>
+            <option *ngFor="let cat of menuCategories" [value]="cat">{{ cat }}</option>
+          </select>
+          <span class="error-message" *ngIf="hasMenuItemError('category', 'required')">
+            Category is required
+          </span>
+        </div>
+      </div>
+
+      <!-- Availability Toggle -->
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input 
+            type="checkbox" 
+            formControlName="is_available"
+            class="checkbox-input">
+          <span class="checkbox-text">Item is currently available</span>
+        </label>
+      </div>
+
+      <!-- Actions -->
+      <div class="edit-actions">
+        <button 
+          type="button" 
+          class="btn-cancel" 
+          (click)="closeEditMenuItemModal()" 
+          [disabled]="savingMenuItem">
+          Cancel
+        </button>
+        <button 
+          type="submit" 
+          class="btn-save" 
+          [disabled]="savingMenuItem || editMenuItemForm.invalid">
+          <span *ngIf="!savingMenuItem">
+            <span class="icon">💾</span>
+            Save Changes
+          </span>
+          <div *ngIf="savingMenuItem" class="btn-loading">
+            <div class="spinner"></div>
+            <span>Saving...</span>
+          </div>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
 </div>

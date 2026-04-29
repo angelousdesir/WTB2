@@ -915,3 +915,293 @@
     cursor: not-allowed;
   }
 }
+
+// Menu Section Enhancements
+.menu-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.btn-upload-menu {
+  @include button-base;
+  @include gold-gradient;
+  color: $color-deep-navy;
+  padding: $spacing-sm $spacing-lg;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-size: $font-size-sm;
+
+  .icon {
+    font-size: $font-size-lg;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-gold;
+  }
+}
+
+.menu-item-card {
+  position: relative;
+
+  .menu-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: $spacing-xs;
+
+    h4 {
+      flex: 1;
+      margin-right: $spacing-sm;
+    }
+
+    .menu-item-actions {
+      display: flex;
+      gap: $spacing-xs;
+      opacity: 0;
+      transition: opacity $transition-base;
+    }
+  }
+
+  &:hover .menu-item-actions {
+    opacity: 1;
+  }
+
+  .btn-edit-menu-item,
+  .btn-delete-menu-item {
+    @include button-base;
+    background: transparent;
+    border: none;
+    padding: $spacing-xs;
+    font-size: $font-size-base;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $radius-sm;
+    transition: all $transition-base;
+  }
+
+  .btn-edit-menu-item {
+    color: $color-soft-amber;
+
+    &:hover {
+      background: rgba($color-soft-amber, 0.2);
+    }
+  }
+
+  .btn-delete-menu-item {
+    color: $color-error;
+
+    &:hover {
+      background: rgba($color-error, 0.2);
+    }
+  }
+
+  .menu-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+  }
+
+  .menu-item-category {
+    background: rgba($color-soft-amber, 0.15);
+    color: $color-soft-amber;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $radius-sm;
+    font-size: $font-size-xs;
+    font-weight: 600;
+  }
+
+  .menu-item-availability {
+    margin-top: $spacing-sm;
+    padding-top: $spacing-sm;
+    border-top: 1px solid rgba($color-error, 0.3);
+
+    .unavailable-badge {
+      display: inline-block;
+      background: rgba($color-error, 0.2);
+      color: $color-error;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $radius-sm;
+      font-size: $font-size-xs;
+      font-weight: 600;
+    }
+  }
+}
+
+.no-menu-section {
+  @include glassmorphism(0.05);
+  border: 2px dashed rgba($color-metallic-gold, 0.2);
+  border-radius: $radius-lg;
+  padding: $spacing-2xl;
+  text-align: center;
+
+  .no-menu-icon {
+    font-size: 4rem;
+    margin-bottom: $spacing-md;
+  }
+
+  p {
+    color: $color-gray-medium;
+    margin-bottom: $spacing-lg;
+  }
+}
+
+// Edit Menu Item Modal
+.edit-menu-item-modal {
+  @include card;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease-out;
+  padding: 0;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+  padding: $spacing-md;
+  @include glassmorphism(0.05);
+  border-radius: $radius-md;
+  border: 2px solid rgba($color-metallic-gold, 0.2);
+  transition: all $transition-base;
+
+  &:hover {
+    border-color: $color-metallic-gold;
+  }
+
+  .checkbox-input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: $color-metallic-gold;
+  }
+
+  .checkbox-text {
+    color: $color-white;
+    font-size: $font-size-base;
+    flex: 1;
+  }
+}
+
+// Menu Item Image Preview in Modal
+.form-section {
+  margin-bottom: $spacing-lg;
+
+  .section-label {
+    display: block;
+    font-weight: 600;
+    color: $color-gray-light;
+    margin-bottom: $spacing-sm;
+    font-size: $font-size-sm;
+  }
+}
+
+.menu-item-image-preview {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto $spacing-md;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  border: 2px solid $color-metallic-gold;
+
+  .image-preview {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .remove-image-btn {
+    position: absolute;
+    top: $spacing-sm;
+    right: $spacing-sm;
+    width: 32px;
+    height: 32px;
+    border-radius: $radius-full;
+    background: rgba($color-error, 0.9);
+    border: none;
+    color: $color-white;
+    cursor: pointer;
+    @include flex-center;
+    transition: all $transition-base;
+
+    &:hover {
+      background: $color-error;
+      transform: scale(1.1);
+    }
+  }
+}
+
+.image-upload-section {
+  text-align: center;
+}
+
+.upload-label-small {
+  @include button-base;
+  background: rgba($color-royal-blue, 0.2);
+  border: 2px dashed $color-metallic-gold;
+  color: $color-metallic-gold;
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+  padding: $spacing-md $spacing-lg;
+
+  &:hover {
+    background: rgba($color-metallic-gold, 0.1);
+  }
+
+  .icon {
+    font-size: $font-size-lg;
+  }
+}
+
+.change-image-btn {
+  @include button-base;
+  background: transparent;
+  border: 2px solid $color-metallic-gold;
+  color: $color-metallic-gold;
+  display: block;
+  margin: $spacing-sm auto 0;
+  padding: $spacing-sm $spacing-lg;
+
+  &:hover {
+    background: rgba($color-metallic-gold, 0.1);
+  }
+}
+
+.menu-item-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  .menu-item-image {
+    height: 200px;
+    background: linear-gradient(135deg, $color-royal-blue, $color-deep-navy);
+    background-size: cover;
+    background-position: center;
+    border-radius: $radius-lg $radius-lg 0 0;
+    margin: -$spacing-md -$spacing-md $spacing-md -$spacing-md;
+  }
+
+  .menu-item-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+}

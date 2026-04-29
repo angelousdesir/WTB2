@@ -82,5 +82,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/add-venue/add-venue.component').then(m => m.AddVenueComponent),
     canActivate: [authGuard]
   },
+  // dashboard
+  { 
+  path: 'dashboard', 
+  loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
+  canActivate: [authGuard]
+  },
   { path: '**', redirectTo: 'home' }
 ];

@@ -30,12 +30,9 @@ export class MenuParserService {
    */
   async parsePdfMenu(pdfFile: File): Promise<ParsedMenuItem[]> {
     try {
-      // Convert PDF pages to images and use OCR
       const arrayBuffer = await pdfFile.arrayBuffer();
       const uint8Array = new Uint8Array(arrayBuffer);
       
-      // For now, we'll use a simple text extraction approach
-      // You could enhance this with a library like pdf.js for better extraction
       const text = await this.extractTextFromPdf(uint8Array);
       return this.parseMenuText(text);
     } catch (error) {
@@ -44,17 +41,8 @@ export class MenuParserService {
     }
   }
 
-  /**
-   * Extract text from PDF (basic implementation)
-   * For production, consider using pdf.js library
-   */
   private async extractTextFromPdf(pdfData: Uint8Array): Promise<string> {
-    // This is a simplified version
-    // For full PDF support, you would use pdf.js:
-    // npm install pdfjs-dist
-    
     try {
-      // Convert to blob and use FileReader as fallback
       const blob = new Blob([pdfData], { type: 'application/pdf' });
       const text = await this.convertPdfToText(blob);
       return text;
@@ -63,17 +51,11 @@ export class MenuParserService {
     }
   }
 
-  /**
-   * Convert PDF to text (placeholder - requires pdf.js for full implementation)
-   */
   private async convertPdfToText(blob: Blob): Promise<string> {
-    // This is a basic implementation
-    // For production, implement proper PDF.js integration
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => {
         const text = reader.result as string;
-        // Basic text extraction (very limited)
         resolve(text || '');
       };
       reader.onerror = () => reject(new Error('Failed to read PDF'));
@@ -81,9 +63,6 @@ export class MenuParserService {
     });
   }
 
-  /**
-   * Parse menu text into structured items
-   */
   parseMenuText(text: string): ParsedMenuItem[] {
     const lines = text.split('\n').filter(line => line.trim().length > 0);
     const items: ParsedMenuItem[] = [];
@@ -109,9 +88,6 @@ export class MenuParserService {
     return items;
   }
 
-  /**
-   * Check if line is a category header
-   */
   private isCategoryHeader(line: string): boolean {
     const categoryKeywords = ['appetizers', 'entrees', 'mains', 'desserts', 'drinks', 'beverages', 'starters', 'salads', 'soups'];
     const isAllCaps = line === line.toUpperCase() && line.length < 30;
@@ -120,9 +96,6 @@ export class MenuParserService {
     return isAllCaps || containsKeyword;
   }
 
-  /**
-   * Parse individual menu item line
-   */
   private parseMenuItem(line: string): ParsedMenuItem | null {
     const pricePattern = /\$?(\d+\.\d{2})/;
     const priceMatch = line.match(pricePattern);
@@ -153,25 +126,127 @@ export class MenuParserService {
    * Save parsed menu items to database
    */
   async saveMenuItems(venueId: string, items: ParsedMenuItem[]): Promise<MenuItem[]> {
-    const menuItems = items.map(item => ({
-      venue_id: venueId,
-      name: item.name,
-      description: item.description,
-      price: item.price,
-      category: item.category || 'Uncategorized',
-      average_rating: 0,
-      total_reviews: 0,
-      is_available: true,
-      created_at: new Date().toISOString()
-    }));
+    const savedItems: MenuItem[] = [];
+
+    for (const item of items) {
+      try {
+        let imageUrl: string | undefined;
+
+        // Upload image if provided
+        if (item.image) {
+          const timestamp = Date.now();
+          const randomString = Math.random().toString(36).substring(7);
+          const fileName = `${venueId}/${timestamp}_${randomString}_${item.image.name}`;
+          
+          console.log('Uploading menu item image to:', fileName);
+          imageUrl = await this.supabaseService.uploadFile('menu-item-images', fileName, item.image);
+          console.log('Uploaded menu item image URL:', imageUrl);
+        }
+
+        const menuItem = {
+          venue_id: venueId,
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          category: item.category || 'Uncategorized',
+          image_url: imageUrl,
+          average_rating: 0,
+          total_reviews: 0,
+          is_available: true,
+          created_at: new Date().toISOString()
+        };
+
+        const { data, error } = await this.supabaseService.client
+          .from('menu_items')
+          .insert([menuItem])
+          .select()
+          .single();
+
+        if (error) throw error;
+        savedItems.push(data as MenuItem);
+      } catch (error) {
+        console.error('Error saving menu item:', item.name, error);
+        // Continue with other items even if one fails
+      }
+    }
+
+    if (savedItems.length === 0) {
+      throw new Error('Failed to save any menu items');
+    }
+
+    return savedItems;
+  }
+
+  /**
+   * Update a menu item
+   */
+  async updateMenuItem(itemId: string, updates: Partial<MenuItem & { image?: File }>): Promise<MenuItem> {
+    const updateData: any = {
+      updated_at: new Date().toISOString()
+    };
+
+    // Upload new image if provided
+    if (updates.image) {
+      // Get the current item to get venue_id
+      const { data: currentItem } = await this.supabaseService.client
+        .from('menu_items')
+        .select('venue_id')
+        .eq('id', itemId)
+        .single();
+
+      if (currentItem) {
+        const timestamp = Date.now();
+        const randomString = Math.random().toString(36).substring(7);
+        const fileName = `${currentItem.venue_id}/${timestamp}_${randomString}_${updates.image.name}`;
+        
+        console.log('Uploading new menu item image to:', fileName);
+        const imageUrl = await this.supabaseService.uploadFile('menu-item-images', fileName, updates.image);
+        console.log('Uploaded new menu item image URL:', imageUrl);
+        updateData.image_url = imageUrl;
+      }
+    }
+
+    if (updates.name !== undefined) updateData.name = updates.name;
+    if (updates.description !== undefined) updateData.description = updates.description;
+    if (updates.price !== undefined) updateData.price = updates.price;
+    if (updates.category !== undefined) updateData.category = updates.category;
+    if (updates.is_available !== undefined) updateData.is_available = updates.is_available;
 
     const { data, error } = await this.supabaseService.client
       .from('menu_items')
-      .insert(menuItems)
-      .select();
+      .update(updateData)
+      .eq('id', itemId)
+      .select()
+      .single();
 
     if (error) throw error;
-    return data as MenuItem[];
+    return data as MenuItem;
+  }
+
+  /**
+   * Delete a menu item
+   */
+  async deleteMenuItem(itemId: string): Promise<void> {
+    const { error } = await this.supabaseService.client
+      .from('menu_items')
+      .delete()
+      .eq('id', itemId);
+
+    if (error) throw error;
+  }
+
+  /**
+   * Get menu item by ID
+   */
+  async getMenuItemById(itemId: string): Promise<MenuItem> {
+    const { data, error } = await this.supabaseService.client
+      .from('menu_items')
+      .select('*')
+      .eq('id', itemId)
+      .single();
+
+    if (error) throw error;
+    return data as MenuItem;
   }
 
   /**

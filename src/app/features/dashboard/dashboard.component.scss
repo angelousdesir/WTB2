@@ -1,0 +1,281 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.dashboard-container {
+  min-height: 100vh;
+  padding: $spacing-xl;
+  background-color: $color-background-dark;
+}
+
+.content-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// Welcome Section
+.welcome-section {
+  @include card;
+  @include gold-gradient;
+  padding: $spacing-2xl;
+  margin-bottom: $spacing-2xl;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+
+  @include respond-to('mobile') {
+    flex-direction: column;
+    gap: $spacing-lg;
+  }
+
+  .welcome-content {
+    h1 {
+      font-size: $font-size-3xl;
+      font-weight: 700;
+      color: $color-deep-navy;
+      margin: 0 0 $spacing-sm 0;
+    }
+
+    .user-role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: $spacing-sm;
+      background: rgba($color-deep-navy, 0.2);
+      color: $color-deep-navy;
+      padding: $spacing-sm $spacing-lg;
+      border-radius: $radius-full;
+      font-weight: 600;
+      margin: 0;
+
+      .role-icon {
+        font-size: $font-size-lg;
+      }
+    }
+  }
+
+  .welcome-stats {
+    display: flex;
+    gap: $spacing-lg;
+  }
+
+  .stat-card {
+    background: rgba($color-deep-navy, 0.1);
+    padding: $spacing-lg;
+    border-radius: $radius-lg;
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    min-width: 150px;
+
+    .stat-icon {
+      font-size: 2.5rem;
+    }
+
+    .stat-info {
+      .stat-value {
+        font-size: $font-size-2xl;
+        font-weight: 700;
+        color: $color-deep-navy;
+        margin: 0;
+      }
+
+      .stat-label {
+        font-size: $font-size-sm;
+        color: rgba($color-deep-navy, 0.7);
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Loading
+.loading {
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-2xl * 2;
+  gap: $spacing-lg;
+  color: $color-gray-medium;
+}
+
+// Sections
+.section {
+  margin-bottom: $spacing-2xl;
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-lg;
+  }
+
+  .section-title {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $color-white;
+    margin: 0 0 $spacing-lg 0;
+  }
+
+  .btn-view-all {
+    @include button-base;
+    background: transparent;
+    border: 2px solid $color-metallic-gold;
+    color: $color-metallic-gold;
+    padding: $spacing-sm $spacing-lg;
+
+    &:hover {
+      background: rgba($color-metallic-gold, 0.1);
+    }
+  }
+}
+
+// Actions Grid
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: $spacing-lg;
+
+  @include respond-to('mobile') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.action-card {
+  @include card;
+  padding: $spacing-xl;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-md;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all $transition-base;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: $shadow-xl;
+  }
+
+  .action-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: $radius-xl;
+    @include flex-center;
+    font-size: 2.5rem;
+  }
+
+  .action-label {
+    color: $color-white;
+    font-weight: 600;
+    font-size: $font-size-base;
+    text-align: center;
+    margin: 0;
+  }
+}
+
+// Venues Preview
+.venues-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: $spacing-lg;
+
+  @include respond-to('mobile') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.venue-preview-card {
+  @include card;
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all $transition-base;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: $shadow-xl, $shadow-gold;
+  }
+
+  .venue-preview-image {
+    height: 180px;
+    background: linear-gradient(135deg, $color-royal-blue, $color-deep-navy);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .venue-preview-info {
+    padding: $spacing-lg;
+
+    h3 {
+      font-size: $font-size-lg;
+      font-weight: 700;
+      color: $color-white;
+      margin: 0 0 $spacing-xs 0;
+      @include truncate(1);
+    }
+
+    p {
+      color: $color-gray-medium;
+      font-size: $font-size-sm;
+      margin: 0 0 $spacing-md 0;
+    }
+
+    .venue-preview-stats {
+      display: flex;
+      gap: $spacing-md;
+
+      span {
+        color: $color-metallic-gold;
+        font-size: $font-size-sm;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Tips Grid
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: $spacing-lg;
+
+  @include respond-to('mobile') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tip-card {
+  @include card;
+  padding: $spacing-xl;
+  text-align: center;
+
+  .tip-icon {
+    font-size: 4rem;
+    margin-bottom: $spacing-lg;
+  }
+
+  h3 {
+    color: $color-white;
+    font-size: $font-size-xl;
+    font-weight: 700;
+    margin: 0 0 $spacing-md 0;
+  }
+
+  p {
+    color: $color-gray-light;
+    font-size: $font-size-base;
+    line-height: 1.6;
+    margin: 0 0 $spacing-lg 0;
+  }
+
+  .btn-tip {
+    @include button-base;
+    @include gold-gradient;
+    color: $color-deep-navy;
+    width: 100%;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow-gold;
+    }
+  }
+}

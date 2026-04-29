@@ -36,12 +36,25 @@ export class ByBarComponent implements OnInit {
   editImagePreview: string | null = null;
   savingVenue = false;
 
+  // Edit menu item properties
+  showEditMenuItemModal = false;
+  editMenuItemForm!: FormGroup;
+  selectedMenuItem: MenuItem | null = null;
+  savingMenuItem = false;
+  selectedMenuItemImage: File | null = null;
+  menuItemImagePreview: string | null = null;
+
   cuisineTypes = [
     'American', 'Italian', 'Mexican', 'Chinese', 'Japanese', 'Thai', 'Indian',
     'Mediterranean', 'French', 'Spanish', 'Greek', 'Korean', 'Vietnamese',
     'BBQ', 'Steakhouse', 'Seafood', 'Pizza', 'Burgers', 'Sushi', 'Cafe',
     'Bar & Grill', 'Pub', 'Sports Bar', 'Brewery', 'Wine Bar', 'Cocktail Bar',
     'Fast Food', 'Vegetarian', 'Vegan', 'Fusion', 'Other'
+  ];
+
+  menuCategories = [
+    'Appetizers', 'Main Course', 'Desserts', 'Drinks', 'Cocktails', 
+    'Beer', 'Wine', 'Uncategorized', 'Other'
   ];
 
   states = [
@@ -62,6 +75,7 @@ export class ByBarComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.initEditForm();
+    this.initEditMenuItemForm();
   }
 
   async ngOnInit(): Promise<void> {
@@ -90,6 +104,16 @@ export class ByBarComponent implements OnInit {
     });
   }
 
+  initEditMenuItemForm(): void {
+    this.editMenuItemForm = this.fb.group({
+      name: ['', [Validators.required]],
+      description: [''],
+      price: ['', [Validators.pattern(/^\d+\.?\d{0,2}$/)]],
+      category: ['', [Validators.required]],
+      is_available: [true]
+    });
+  }
+
   async loadVenues(): Promise<void> {
     this.loading = true;
     try {
@@ -102,21 +126,24 @@ export class ByBarComponent implements OnInit {
     }
   }
 
-  async selectVenue(venue: Venue): Promise<void> {
-    this.selectedVenue = venue;
-    this.router.navigate(['/by-bar', venue.id]);
-    
-    try {
-      const [posts, menuItems] = await Promise.all([
-        this.postService.getPostsByVenue(venue.id),
-        this.menuParserService.getMenuItems(venue.id)
-      ]);
-      this.venuePosts = posts;
-      this.venueMenuItems = menuItems;
-    } catch (error) {
-      console.error('Error loading venue details:', error);
-    }
+async selectVenue(venue: Venue): Promise<void> {
+  this.selectedVenue = venue;
+  console.log('Selected venue:', venue);
+  console.log('Venue image URL:', venue.image_url);
+  
+  this.router.navigate(['/by-bar', venue.id]);
+  
+  try {
+    const [posts, menuItems] = await Promise.all([
+      this.postService.getPostsByVenue(venue.id),
+      this.menuParserService.getMenuItems(venue.id)
+    ]);
+    this.venuePosts = posts;
+    this.venueMenuItems = menuItems;
+  } catch (error) {
+    console.error('Error loading venue details:', error);
   }
+}
 
   get filteredVenues(): Venue[] {
     if (!this.searchQuery) {
@@ -151,6 +178,11 @@ export class ByBarComponent implements OnInit {
     this.router.navigate(['/add-venue']);
   }
 
+  navigateToUploadMenu(): void {
+    if (!this.selectedVenue) return;
+    this.router.navigate(['/menu-upload'], { queryParams: { venueId: this.selectedVenue.id } });
+  }
+
   async upgradeToVenueOwner(): Promise<void> {
     this.upgradingRole = true;
     try {
@@ -174,22 +206,19 @@ export class ByBarComponent implements OnInit {
     return !this.authService.isAuthenticated() && this.venues.length >= 5;
   }
 
-  // Check if current user can edit this venue
+  // Venue editing methods
   canEditVenue(venue: Venue | null): boolean {
     if (!venue || !this.authService.isAuthenticated()) return false;
     
     const currentUser = this.authService.currentUserValue;
     if (!currentUser) return false;
 
-    // Admins can edit any venue, owners can edit their own
     return currentUser.role === 'admin' || venue.owner_id === currentUser.id;
   }
 
-  // Open edit modal
   openEditModal(): void {
     if (!this.selectedVenue) return;
 
-    // Populate form with current venue data
     this.editVenueForm.patchValue({
       name: this.selectedVenue.name,
       description: this.selectedVenue.description || '',
@@ -202,14 +231,11 @@ export class ByBarComponent implements OnInit {
       cuisine_type: this.selectedVenue.cuisine_type || ''
     });
 
-    // Set current image as preview
     this.editImagePreview = this.selectedVenue.image_url || null;
     this.selectedEditImage = null;
-
     this.showEditModal = true;
   }
 
-  // Close edit modal
   closeEditModal(): void {
     this.showEditModal = false;
     this.editVenueForm.reset();
@@ -217,7 +243,6 @@ export class ByBarComponent implements OnInit {
     this.editImagePreview = null;
   }
 
-  // Handle image selection for edit
   onEditImageSelect(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
@@ -243,13 +268,11 @@ export class ByBarComponent implements OnInit {
     }
   }
 
-  // Remove edit image
   removeEditImage(): void {
     this.selectedEditImage = null;
     this.editImagePreview = this.selectedVenue?.image_url || null;
   }
 
-  // Save venue changes
   async saveVenueChanges(): Promise<void> {
     if (!this.selectedVenue || this.editVenueForm.invalid) {
       Object.keys(this.editVenueForm.controls).forEach(key => {
@@ -263,7 +286,6 @@ export class ByBarComponent implements OnInit {
     try {
       const formValue = this.editVenueForm.value;
       
-      // Call update service (we'll add this method next)
       const updatedVenue = await this.venueService.updateVenue(
         this.selectedVenue.id,
         {
@@ -280,7 +302,6 @@ export class ByBarComponent implements OnInit {
         }
       );
 
-      // Update the selected venue and venues list
       this.selectedVenue = updatedVenue;
       const index = this.venues.findIndex(v => v.id === updatedVenue.id);
       if (index !== -1) {
@@ -297,7 +318,6 @@ export class ByBarComponent implements OnInit {
     }
   }
 
-  // Helper method to check form errors
   hasEditError(fieldName: string, errorType?: string): boolean {
     const field = this.editVenueForm.get(fieldName);
     if (!field) return false;
@@ -307,4 +327,130 @@ export class ByBarComponent implements OnInit {
     }
     return field.invalid && (field.dirty || field.touched);
   }
+
+  // Menu item editing methods
+  openEditMenuItemModal(item: MenuItem): void {
+    this.selectedMenuItem = item;
+    this.editMenuItemForm.patchValue({
+      name: item.name,
+      description: item.description || '',
+      price: item.price || '',
+      category: item.category || 'Uncategorized',
+      is_available: item.is_available !== false
+    });
+
+     // Set current image
+    this.menuItemImagePreview = item.image_url || null;
+    this.selectedMenuItemImage = null;
+    this.showEditMenuItemModal = true;
+  }
+
+  closeEditMenuItemModal(): void {
+    this.showEditMenuItemModal = false;
+    this.editMenuItemForm.reset();
+    this.selectedMenuItem = null;
+    this.selectedMenuItemImage = null;
+    this.menuItemImagePreview = null;
+  }
+
+ async saveMenuItemChanges(): Promise<void> {
+  if (!this.selectedMenuItem || this.editMenuItemForm.invalid) {
+    Object.keys(this.editMenuItemForm.controls).forEach(key => {
+      this.editMenuItemForm.get(key)?.markAsTouched();
+    });
+    return;
+  }
+
+  this.savingMenuItem = true;
+
+  try {
+    const formValue = this.editMenuItemForm.value;
+    
+    const updatedItem = await this.menuParserService.updateMenuItem(
+      this.selectedMenuItem.id,
+      {
+        name: formValue.name,
+        description: formValue.description || undefined,
+        price: formValue.price ? parseFloat(formValue.price) : undefined,
+        category: formValue.category,
+        is_available: formValue.is_available,
+        image: this.selectedMenuItemImage || undefined
+      }
+    );
+
+    // Update in local arrays
+    const allIndex = this.allMenuItems.findIndex(i => i.id === updatedItem.id);
+    if (allIndex !== -1) {
+      this.allMenuItems[allIndex] = updatedItem;
+    }
+
+    const filteredIndex = this.menuItems.findIndex(i => i.id === updatedItem.id);
+    if (filteredIndex !== -1) {
+      this.menuItems[filteredIndex] = updatedItem;
+    }
+
+    alert('Menu item updated successfully!');
+    this.closeEditMenuItemModal();
+  } catch (error: any) {
+    console.error('Error updating menu item:', error);
+    alert(error.message || 'Failed to update menu item. Please try again.');
+  } finally {
+    this.savingMenuItem = false;
+  }
+}
+
+  async deleteMenuItem(item: MenuItem): Promise<void> {
+    const confirm = window.confirm(`Are you sure you want to delete "${item.name}"?`);
+    if (!confirm) return;
+
+    try {
+      await this.menuParserService.deleteMenuItem(item.id);
+      this.venueMenuItems = this.venueMenuItems.filter(i => i.id !== item.id);
+      alert('Menu item deleted successfully!');
+    } catch (error: any) {
+      console.error('Error deleting menu item:', error);
+      alert(error.message || 'Failed to delete menu item. Please try again.');
+    }
+  }
+
+  hasMenuItemError(fieldName: string, errorType?: string): boolean {
+    const field = this.editMenuItemForm.get(fieldName);
+    if (!field) return false;
+    
+    if (errorType) {
+      return field.hasError(errorType) && (field.dirty || field.touched);
+    }
+    return field.invalid && (field.dirty || field.touched);
+  }
+
+   onMenuItemImageSelect(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image size must be less than 5MB');
+      return;
+    }
+
+    this.selectedMenuItemImage = file;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.menuItemImagePreview = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+removeMenuItemImage(): void {
+  this.selectedMenuItemImage = null;
+  this.menuItemImagePreview = this.selectedMenuItem?.image_url || null;
+}
+
 }

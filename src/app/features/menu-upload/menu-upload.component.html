@@ -110,18 +110,68 @@
     </div>
 
     <!-- Manual Entry Mode -->
-    <div *ngIf="uploadMode === 'manual' && uploadStep === 'select'" class="manual-entry-form">
-      <form [formGroup]="manualEntryForm">
-        <!-- Venue Selection -->
-        <div class="form-group">
-          <label>Select Venue *</label>
-          <select formControlName="venue_id" class="form-select">
-            <option value="">Choose a venue</option>
-            <option *ngFor="let venue of venues" [value]="venue.id">
-              {{ venue.name }} - {{ venue.city }}
-            </option>
-          </select>
+   <div formArrayName="items" class="items-list">
+  <div *ngFor="let item of menuItems.controls; let i = index" [formGroupName]="i" class="menu-item-form">
+    <div class="item-header">
+      <span class="item-number">Item {{ i + 1 }}</span>
+      <button type="button" class="btn-remove-item" (click)="removeMenuItem(i)">
+        <span>🗑️</span>
+      </button>
+    </div>
+
+    <div class="item-fields">
+      <!-- Image Upload -->
+      <div class="form-group">
+        <label>Item Photo (Optional)</label>
+        
+        <div class="item-image-upload" *ngIf="!manualItemImages.get(i)?.preview">
+          <input 
+            type="file" 
+            [id]="'itemImageInput-' + i" 
+            accept="image/*" 
+            (change)="onManualItemImageSelect($event, i)"
+            hidden>
+          <label [for]="'itemImageInput-' + i" class="upload-label-small">
+            <span class="icon">📷</span>
+            Add Photo
+          </label>
         </div>
+
+        <div class="item-image-preview" *ngIf="manualItemImages.get(i)?.preview">
+          <img [src]="manualItemImages.get(i)?.preview" alt="Item preview">
+          <button type="button" class="btn-remove-image" (click)="removeManualItemImage(i)">
+            <span>✕</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Name *</label>
+          <input type="text" formControlName="name" placeholder="Grilled Salmon">
+        </div>
+
+        <div class="form-group form-group-small">
+          <label>Price</label>
+          <input type="text" formControlName="price" placeholder="12.99">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <input type="text" formControlName="description" placeholder="Fresh Atlantic salmon with lemon butter sauce">
+      </div>
+
+      <div class="form-group">
+        <label>Category *</label>
+        <select formControlName="category" class="form-select">
+          <option value="">Select category</option>
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
 
         <!-- Menu Items -->
         <div class="menu-items-section">
