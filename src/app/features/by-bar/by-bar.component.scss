@@ -1205,3 +1205,219 @@
     flex-direction: column;
   }
 }
+
+.menu-section {
+  margin-bottom: $spacing-xl;
+
+  h3 {
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $color-white;
+    margin-bottom: $spacing-lg;
+  }
+}
+
+.menu-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.btn-upload-menu {
+  @include button-base;
+  @include gold-gradient;
+  color: $color-deep-navy;
+  padding: $spacing-sm $spacing-lg;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-size: $font-size-sm;
+
+  .icon {
+    font-size: $font-size-lg;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-gold;
+  }
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: $spacing-md;
+}
+
+.menu-item-card {
+  @include glassmorphism(0.05);
+  border: 1px solid rgba($color-metallic-gold, 0.1);
+  border-radius: $radius-lg;
+  overflow: hidden;
+  transition: all $transition-base;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &:hover {
+    border-color: $color-metallic-gold;
+    background: rgba($color-royal-blue, 0.2);
+    transform: translateY(-4px);
+    box-shadow: $shadow-lg;
+
+    .menu-item-actions {
+      opacity: 1;
+    }
+  }
+
+  .menu-item-image {
+    width: 100%;
+    height: 180px;
+    background: linear-gradient(135deg, $color-royal-blue, $color-deep-navy);
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+  }
+
+  .menu-item-content {
+    padding: $spacing-md;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .menu-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: $spacing-sm;
+    gap: $spacing-sm;
+
+    h4 {
+      font-size: $font-size-base;
+      font-weight: 600;
+      color: $color-white;
+      margin: 0;
+      flex: 1;
+      line-height: 1.3;
+    }
+
+    .menu-item-actions {
+      display: flex;
+      gap: $spacing-xs;
+      opacity: 0;
+      transition: opacity $transition-base;
+      flex-shrink: 0;
+    }
+  }
+
+  .btn-edit-menu-item,
+  .btn-delete-menu-item {
+    @include button-base;
+    background: transparent;
+    border: none;
+    padding: $spacing-xs;
+    font-size: $font-size-base;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $radius-sm;
+    transition: all $transition-base;
+  }
+
+  .btn-edit-menu-item {
+    color: $color-soft-amber;
+
+    &:hover {
+      background: rgba($color-soft-amber, 0.2);
+    }
+  }
+
+  .btn-delete-menu-item {
+    color: $color-error;
+
+    &:hover {
+      background: rgba($color-error, 0.2);
+    }
+  }
+
+  .menu-item-desc {
+    font-size: $font-size-sm;
+    color: $color-gray-light;
+    margin: 0 0 $spacing-md 0;
+    @include truncate(2);
+    flex: 1;
+  }
+
+  .menu-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $spacing-xs;
+    margin-top: auto;
+    padding-top: $spacing-sm;
+    border-top: 1px solid rgba($color-metallic-gold, 0.1);
+  }
+
+  .menu-item-price {
+    color: $color-metallic-gold;
+    font-weight: 600;
+    font-size: $font-size-base;
+  }
+
+  .menu-item-category {
+    background: rgba($color-soft-amber, 0.15);
+    color: $color-soft-amber;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $radius-sm;
+    font-size: $font-size-xs;
+    font-weight: 600;
+  }
+
+  .menu-item-rating {
+    color: $color-metallic-gold;
+    font-size: $font-size-sm;
+  }
+
+  .menu-item-availability {
+    margin-top: $spacing-sm;
+    padding-top: $spacing-sm;
+    border-top: 1px solid rgba($color-error, 0.3);
+
+    .unavailable-badge {
+      display: inline-block;
+      background: rgba($color-error, 0.2);
+      color: $color-error;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $radius-sm;
+      font-size: $font-size-xs;
+      font-weight: 600;
+    }
+  }
+}
+
+.no-menu-section {
+  @include glassmorphism(0.05);
+  border: 2px dashed rgba($color-metallic-gold, 0.2);
+  border-radius: $radius-lg;
+  padding: $spacing-2xl;
+  text-align: center;
+
+  .no-menu-icon {
+    font-size: 4rem;
+    margin-bottom: $spacing-md;
+  }
+
+  p {
+    color: $color-gray-medium;
+    margin-bottom: $spacing-lg;
+  }
+}

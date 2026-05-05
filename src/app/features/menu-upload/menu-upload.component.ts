@@ -27,6 +27,9 @@ export class MenuUploadComponent implements OnInit {
   errorMessage = '';
   uploadMode: 'auto' | 'manual' = 'auto';
 
+  // Manual entry images
+  manualItemImages: Map<number, { file: File | null, preview: string | null }> = new Map();
+
   categories = [
     'Appetizers',
     'Main Course',
@@ -104,7 +107,6 @@ export class MenuUploadComponent implements OnInit {
     this.manualItemImages.set(newIndex, { file: null, preview: null });
   }
 
-  // Update the removeMenuItem method:
   removeMenuItem(index: number): void {
     this.menuItems.removeAt(index);
     this.manualItemImages.delete(index);
@@ -112,11 +114,9 @@ export class MenuUploadComponent implements OnInit {
 
   switchToManualMode(): void {
     this.uploadMode = 'manual';
-    // Copy venue selection
     const venueId = this.menuForm.get('venue_id')?.value;
     this.manualEntryForm.patchValue({ venue_id: venueId });
     
-    // Add initial empty item
     if (this.menuItems.length === 0) {
       this.addMenuItem();
     }
@@ -124,7 +124,6 @@ export class MenuUploadComponent implements OnInit {
 
   switchToAutoMode(): void {
     this.uploadMode = 'auto';
-    // Copy venue selection
     const venueId = this.manualEntryForm.get('venue_id')?.value;
     this.menuForm.patchValue({ venue_id: venueId });
   }
@@ -134,7 +133,6 @@ export class MenuUploadComponent implements OnInit {
     if (input.files && input.files[0]) {
       const file = input.files[0];
       
-      // Accept images and PDFs
       if (!file.type.startsWith('image/') && file.type !== 'application/pdf') {
         alert('Please select an image or PDF file');
         return;
@@ -148,6 +146,34 @@ export class MenuUploadComponent implements OnInit {
       this.selectedMenuFile = file;
       this.errorMessage = '';
     }
+  }
+
+  onManualItemImageSelect(event: Event, index: number): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size must be less than 5MB');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const preview = e.target?.result as string;
+        this.manualItemImages.set(index, { file, preview });
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeManualItemImage(index: number): void {
+    this.manualItemImages.set(index, { file: null, preview: null });
   }
 
   async parseMenu(): Promise<void> {
@@ -168,7 +194,6 @@ export class MenuUploadComponent implements OnInit {
     this.errorMessage = '';
 
     try {
-      // Check if it's a PDF
       if (this.selectedMenuFile.type === 'application/pdf') {
         this.parsedItems = await this.menuParserService.parsePdfMenu(this.selectedMenuFile);
       } else {
@@ -224,88 +249,58 @@ export class MenuUploadComponent implements OnInit {
       this.loading = false;
     }
   }
-  
-   // Add image handling methods:
-onManualItemImageSelect(event: Event, index: number): void {
-  const input = event.target as HTMLInputElement;
-  if (input.files && input.files[0]) {
-    const file = input.files[0];
-    
-    if (!file.type.startsWith('image/')) {
-      alert('Please select an image file');
-      return;
-    }
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Image size must be less than 5MB');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const preview = e.target?.result as string;
-      this.manualItemImages.set(index, { file, preview });
-    };
-    reader.readAsDataURL(file);
-  }
-}
-
-removeManualItemImage(index: number): void {
-  this.manualItemImages.set(index, { file: null, preview: null });
-}
-
- // Update saveManualMenuItems method:
-async saveManualMenuItems(): Promise<void> {
-  if (this.manualEntryForm.invalid || this.menuItems.length === 0) {
-    alert('Please fill in all required fields');
-    Object.keys(this.manualEntryForm.controls).forEach(key => {
-      this.manualEntryForm.get(key)?.markAsTouched();
-    });
-    this.menuItems.controls.forEach(control => {
-      Object.keys(control.value).forEach(key => {
-        control.get(key)?.markAsTouched();
+  async saveManualMenuItems(): Promise<void> {
+    if (this.manualEntryForm.invalid || this.menuItems.length === 0) {
+      alert('Please fill in all required fields');
+      Object.keys(this.manualEntryForm.controls).forEach(key => {
+        this.manualEntryForm.get(key)?.markAsTouched();
       });
-    });
-    return;
-  }
-
-  this.loading = true;
-  this.errorMessage = '';
-
-  try {
-    const venueId = this.manualEntryForm.get('venue_id')?.value;
-    
-    const isOwner = await this.venueService.isVenueOwner(venueId);
-    if (!isOwner) {
-      throw new Error('You can only upload menus for venues you own.');
+      this.menuItems.controls.forEach(control => {
+        Object.keys(control.value).forEach(key => {
+          control.get(key)?.markAsTouched();
+        });
+      });
+      return;
     }
 
-    // Convert form data to ParsedMenuItem format with images
-    const items: ParsedMenuItem[] = this.menuItems.value.map((item: any, index: number) => {
-      const imageData = this.manualItemImages.get(index);
-      return {
-        name: item.name,
-        description: item.description || undefined,
-        price: item.price ? parseFloat(item.price) : undefined,
-        category: item.category,
-        image: imageData?.file || undefined
-      };
-    });
+    this.loading = true;
+    this.errorMessage = '';
 
-    await this.menuParserService.saveMenuItems(venueId, items);
-    
-    this.uploadStep = 'success';
-    
-    setTimeout(() => {
-      this.router.navigate(['/by-bar', venueId]);
-    }, 2000);
-  } catch (error: any) {
-    this.errorMessage = error.message || 'Failed to save menu items';
-    console.error('Save error:', error);
-  } finally {
-    this.loading = false;
+    try {
+      const venueId = this.manualEntryForm.get('venue_id')?.value;
+      
+      const isOwner = await this.venueService.isVenueOwner(venueId);
+      if (!isOwner) {
+        throw new Error('You can only upload menus for venues you own.');
+      }
+
+      // Convert form data to ParsedMenuItem format with images
+      const items: ParsedMenuItem[] = this.menuItems.value.map((item: any, index: number) => {
+        const imageData = this.manualItemImages.get(index);
+        return {
+          name: item.name,
+          description: item.description || undefined,
+          price: item.price ? parseFloat(item.price) : undefined,
+          category: item.category,
+          image: imageData?.file || undefined
+        };
+      });
+
+      await this.menuParserService.saveMenuItems(venueId, items);
+      
+      this.uploadStep = 'success';
+      
+      setTimeout(() => {
+        this.router.navigate(['/by-bar', venueId]);
+      }, 2000);
+    } catch (error: any) {
+      this.errorMessage = error.message || 'Failed to save menu items';
+      console.error('Save error:', error);
+    } finally {
+      this.loading = false;
+    }
   }
-}
 
   resetUpload(): void {
     this.selectedMenuFile = null;
@@ -316,6 +311,7 @@ async saveManualMenuItems(): Promise<void> {
       venue_id: ['', Validators.required],
       items: this.fb.array([])
     });
+    this.manualItemImages.clear();
     this.errorMessage = '';
     this.uploadMode = 'auto';
   }

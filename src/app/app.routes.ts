@@ -88,5 +88,9 @@ export const routes: Routes = [
   loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
   canActivate: [authGuard]
   },
+  { 
+  path: 'menu-item/:id', 
+  loadComponent: () => import('./features/menu-item-detail/menu-item-detail.component').then(m => m.MenuItemDetailComponent)
+  },
   { path: '**', redirectTo: 'home' }
 ];

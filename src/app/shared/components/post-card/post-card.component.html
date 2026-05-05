@@ -1,60 +1,58 @@
 <div class="post-card">
-  <!-- Header -->
+  <!-- Post Image -->
+  <div 
+    class="post-image" 
+    *ngIf="post.image_url"
+    [style.background-image]="'url(' + post.image_url + ')'">
+  </div>
+
+  <!-- Post Header -->
   <div class="post-header">
     <div class="user-info">
+      <!--
       <div class="user-avatar">
-        <img *ngIf="post.user?.avatar_url" [src]="post.user?.avatar_url" alt="User avatar">
-        <span *ngIf="!post.user?.avatar_url" class="avatar-placeholder">
-          <!--{{ post.user?.username?.charAt(0).toUpperCase() || 'U' }}-->
-        </span>
+        {{ getUserInitial() }}
       </div>
+      -->
       <div class="user-details">
-        <p class="username">{{ post.user?.username || 'Anonymous' }}</p>
-        <p class="post-time">{{ formatDate(post.created_at) }}</p>
+        <h4 class="username">{{ post.user?.username || 'Anonymous' }}</h4>
+        <!-- <p class="post-date">{{ getFormattedDate() }} </p> -->
       </div>
     </div>
-    
-    <button *ngIf="showDelete" class="delete-btn" (click)="onDelete()">
-      <span>🗑️</span>
-    </button>
-  </div>
 
-  <!-- Venue/Menu Item Info -->
-  <div class="post-meta" *ngIf="post.venue || post.menu_item">
-    <span class="meta-tag" *ngIf="post.venue">
-      <span class="icon">📍</span>
-      {{ post.venue.name }}
-    </span>
-    <span class="meta-tag" *ngIf="post.menu_item">
-      <span class="icon">🍽️</span>
-      {{ post.menu_item.name }}
-    </span>
-    <span class="meta-tag" *ngIf="post.category">
-      <span class="icon">🏷️</span>
-      {{ post.category }}
-    </span>
-  </div>
-
-  <!-- Image -->
-  <div class="post-image" *ngIf="post.image_url">
-    <img [src]="post.image_url" [alt]="post.caption">
-  </div>
-
-  <!-- Rating -->
-  <div class="post-rating">
-    <div class="stars">
-      <span 
-        *ngFor="let star of getStarArray()" 
-        class="star"
-        [class.filled]="star <= post.rating">
-        ⭐
-      </span>
+    <!-- Rating -->
+    <div class="post-rating">
+      <div class="stars">
+        <span *ngFor="let star of [1,2,3,4,5]" class="star" [class.filled]="star <= post.rating">⭐</span>
+      </div>
+      <span class="rating-value">{{ post.rating.toFixed(1) }}</span>
     </div>
-    <span class="rating-value">{{ post.rating }}/5</span>
   </div>
 
-  <!-- Caption -->
-  <div class="post-caption">
-    <p>{{ post.caption }}</p>
+  <!-- Post Content -->
+  <div class="post-content">
+    <h3 class="post-title">{{ post.title }}</h3>
+    <p class="post-text">{{ post.content }}</p>
+  </div>
+
+  <!-- Menu Item Tag (if post is about a specific menu item) -->
+  <div class="menu-item-tag" *ngIf="post.menu_item">
+    <span class="item-icon">🍽️</span>
+    <div class="item-info">
+      <span class="item-name">{{ post.menu_item.name }}</span>
+      <div class="item-meta">
+        <span class="item-category" *ngIf="post.menu_item.category">{{ post.menu_item.category }}</span>
+        <span class="item-price" *ngIf="post.menu_item.price">${{ post.menu_item.price.toFixed(2) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Venue Info -->
+  <div class="post-footer" *ngIf="post.venue">
+    <div class="venue-tag">
+      <span class="venue-icon">🏪</span>
+      <span class="venue-name">{{ post.venue.name }}</span>
+      <span class="venue-location">{{ post.venue.city }}, {{ post.venue.state }}</span>
+    </div>
   </div>
 </div>

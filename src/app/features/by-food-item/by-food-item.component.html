@@ -71,7 +71,7 @@
 
     <!-- Menu Items Grid -->
 <div *ngIf="!loading && menuItems.length > 0" class="menu-items-grid">
- <div *ngFor="let item of menuItems" class="menu-item-card">
+ <div *ngFor="let item of menuItems" class="menu-item-card" (click)="navigateToMenuItem(item.id)">
   <!-- Menu Item Image -->
   <div 
     class="menu-item-image" 

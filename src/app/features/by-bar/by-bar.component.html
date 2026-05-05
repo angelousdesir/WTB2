@@ -187,55 +187,59 @@
           </div>
         </div>
 
-       <!-- Menu Items -->
-        <div class="menu-section" *ngIf="venueMenuItems.length > 0">
-          <div class="menu-section-header">
-            <h3>Menu Items</h3>
+      <!-- Menu Items -->
+<div class="menu-section" *ngIf="venueMenuItems.length > 0">
+  <div class="menu-section-header">
+    <h3>Menu Items</h3>
+    <button 
+      *ngIf="canEditVenue(selectedVenue)" 
+      class="btn-upload-menu"
+      (click)="navigateToUploadMenu()">
+      <span class="icon">➕</span>
+      Add Menu Items
+    </button>
+  </div>
+  <div class="menu-grid">
+    <div *ngFor="let item of venueMenuItems" class="menu-item-card">
+      <!-- Menu Item Image -->
+      <div 
+        class="menu-item-image" 
+        *ngIf="item.image_url"
+        [style.background-image]="'url(' + item.image_url + ')'">
+      </div>
+      
+      <div class="menu-item-content">
+        <div class="menu-item-header">
+          <h4>{{ item.name }}</h4>
+          <div class="menu-item-actions" *ngIf="canEditVenue(selectedVenue)">
             <button 
-              *ngIf="canEditVenue(selectedVenue)" 
-              class="btn-upload-menu"
-              (click)="navigateToUploadMenu()">
-              <span class="icon">➕</span>
-              Add Menu Items
+              class="btn-edit-menu-item" 
+              (click)="openEditMenuItemModal(item)"
+              title="Edit item">
+              ✏️
+            </button>
+            <button 
+              class="btn-delete-menu-item" 
+              (click)="deleteMenuItem(item)"
+              title="Delete item">
+              🗑️
             </button>
           </div>
-          <div class="menu-grid">
-  <div *ngFor="let item of venueMenuItems" class="menu-item-card">
-    <!-- Menu Item Image -->
-    <div 
-      class="menu-item-image" 
-      *ngIf="item.image_url"
-      [style.background-image]="'url(' + item.image_url + ')'">
-    </div>
-    
-    <div class="menu-item-content">
-      <div class="menu-item-header">
-        <h4>{{ item.name }}</h4>
-        <div class="menu-item-actions" *ngIf="canEditVenue(selectedVenue)">
-          <button 
-            class="btn-edit-menu-item" 
-            (click)="openEditMenuItemModal(item)"
-            title="Edit item">
-            ✏️
-          </button>
-          <button 
-            class="btn-delete-menu-item" 
-            (click)="deleteMenuItem(item)"
-            title="Delete item">
-            🗑️
-          </button>
         </div>
-      </div>
-      <p class="menu-item-desc" *ngIf="item.description">{{ item.description }}</p>
-      <div class="menu-item-footer">
-        <span class="menu-item-price" *ngIf="item.price">${{ item.price.toFixed(2) }}</span>
-        <span class="menu-item-category" *ngIf="item.category">{{ item.category }}</span>
-        <span class="menu-item-rating">
-          ⭐ {{ item.average_rating.toFixed(1) }}
-        </span>
-      </div>
-      <div class="menu-item-availability" *ngIf="item.is_available === false">
-        <span class="unavailable-badge">Currently Unavailable</span>
+        
+        <p class="menu-item-desc" *ngIf="item.description">{{ item.description }}</p>
+        
+        <div class="menu-item-footer">
+          <span class="menu-item-price" *ngIf="item.price">${{ item.price.toFixed(2) }}</span>
+          <span class="menu-item-category" *ngIf="item.category">{{ item.category }}</span>
+          <span class="menu-item-rating">
+            ⭐ {{ item.average_rating.toFixed(1) }}
+          </span>
+        </div>
+        
+        <div class="menu-item-availability" *ngIf="item.is_available === false">
+          <span class="unavailable-badge">Currently Unavailable</span>
+        </div>
       </div>
     </div>
   </div>

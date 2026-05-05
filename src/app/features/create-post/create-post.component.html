@@ -1,95 +1,132 @@
 <div class="create-post-container">
-  <div class="create-post-card">
-    <div class="card-header">
-      <h1>Create New Review</h1>
-      <p>Share your dining experience with the community</p>
+  <div class="post-form-card">
+    <!-- Header -->
+    <div class="form-header">
+      <button class="btn-back" routerLink="/feed">
+        <span class="icon">←</span>
+        Back to Feed
+      </button>
+      <h1>Create Post</h1>
+      <p>Share your food and drink experience</p>
+    </div>
+
+    <!-- Error Alert -->
+    <div class="error-alert" *ngIf="errorMessage">
+      <span class="error-icon">⚠️</span>
+      {{ errorMessage }}
     </div>
 
     <form [formGroup]="postForm" (ngSubmit)="onSubmit()" class="post-form">
+      <!-- Venue Selection -->
+      <div class="form-group">
+        <label for="venue">Venue *</label>
+        <select 
+          id="venue" 
+          formControlName="venue_id" 
+          (change)="onVenueChange()"
+          class="form-select"
+          [class.error]="hasError('venue_id')">
+          <option value="">Select a venue</option>
+          <option *ngFor="let venue of venues" [value]="venue.id">
+            {{ venue.name }} - {{ venue.city }}
+          </option>
+        </select>
+        <span class="error-message" *ngIf="hasError('venue_id', 'required')">
+          Please select a venue
+        </span>
+      </div>
+
+      <!-- Menu Item Selection (Optional) -->
+      <div class="form-group" *ngIf="menuItems.length > 0">
+        <label for="menu_item">Menu Item (Optional)</label>
+        <select 
+          id="menu_item" 
+          formControlName="menu_item_id" 
+          class="form-select">
+          <option value="">General review (no specific item)</option>
+          <option *ngFor="let item of menuItems" [value]="item.id">
+            {{ item.name }}
+            <span *ngIf="item.price"> - ${{ item.price.toFixed(2) }}</span>
+          </option>
+        </select>
+        <p class="form-hint">Select a specific menu item or leave blank for a general venue review</p>
+      </div>
+
+      <!-- Title -->
+      <div class="form-group">
+        <label for="title">Title *</label>
+        <input
+          type="text"
+          id="title"
+          formControlName="title"
+          placeholder="Great dinner experience!"
+          [class.error]="hasError('title')">
+        <span class="error-message" *ngIf="hasError('title', 'required')">
+          Title is required
+        </span>
+        <span class="error-message" *ngIf="hasError('title', 'minlength')">
+          Title must be at least 3 characters
+        </span>
+      </div>
+
+      <!-- Content -->
+      <div class="form-group">
+        <label for="content">Review *</label>
+        <textarea
+          id="content"
+          formControlName="content"
+          rows="6"
+          placeholder="Share your experience... What did you love? What could be better?"
+          [class.error]="hasError('content')">
+        </textarea>
+        <span class="error-message" *ngIf="hasError('content', 'required')">
+          Review is required
+        </span>
+        <span class="error-message" *ngIf="hasError('content', 'minlength')">
+          Review must be at least 10 characters
+        </span>
+      </div>
+
+      <!-- Rating -->
+      <div class="form-group">
+        <label>Rating *</label>
+        <div class="rating-selector">
+          <button
+            *ngFor="let star of ratingStars"
+            type="button"
+            class="star-btn"
+            [class.active]="star <= postForm.get('rating')?.value"
+            (click)="setRating(star)">
+            <span class="star">⭐</span>
+          </button>
+          <span class="rating-value">{{ postForm.get('rating')?.value }}/5</span>
+        </div>
+      </div>
+
       <!-- Image Upload -->
-      <div class="form-section">
-        <label class="section-label">Photo (Optional)</label>
+      <div class="form-group">
+        <label>Photo (Optional)</label>
         
-        <div class="image-upload" *ngIf="!imagePreview">
+        <div class="image-upload-area" *ngIf="!imagePreview">
           <input 
             type="file" 
             id="imageInput" 
             accept="image/*" 
             (change)="onImageSelect($event)"
             hidden>
-          <label for="imageInput" class="upload-area">
+          <label for="imageInput" class="upload-label">
             <div class="upload-icon">📷</div>
-            <p class="upload-text">Click to upload an image</p>
-            <p class="upload-hint">Max size: 5MB</p>
+            <p class="upload-text">Click to upload photo</p>
+            <p class="upload-hint">JPG, PNG (Max 5MB)</p>
           </label>
         </div>
 
-        <div class="image-preview" *ngIf="imagePreview">
-          <img [src]="imagePreview" alt="Preview">
+        <div class="image-preview-container" *ngIf="imagePreview">
+          <img [src]="imagePreview" alt="Preview" class="image-preview">
           <button type="button" class="remove-image" (click)="removeImage()">
             <span>✕</span>
           </button>
         </div>
-      </div>
-
-      <!-- Rating -->
-      <div class="form-section">
-        <label class="section-label">Rating *</label>
-        <app-rating-stars 
-          [rating]="rating" 
-          [interactive]="true"
-          (ratingChange)="onRatingChange($event)">
-        </app-rating-stars>
-        <p class="field-hint" *ngIf="rating === 0">Please select a rating</p>
-      </div>
-
-      <!-- Venue Selection -->
-      <div class="form-section">
-        <label class="section-label">Venue (Optional)</label>
-        <select 
-          formControlName="venue_id" 
-          (change)="onVenueChange($any($event.target).value)"
-          class="form-select">
-          <option value="">Select a venue</option>
-          <option *ngFor="let venue of venues" [value]="venue.id">
-            {{ venue.name }} - {{ venue.city }}
-          </option>
-        </select>
-      </div>
-
-      <!-- Menu Item Selection -->
-      <div class="form-section" *ngIf="menuItems.length > 0">
-        <label class="section-label">Menu Item (Optional)</label>
-        <select formControlName="menu_item_id" class="form-select">
-          <option value="">Select a menu item</option>
-          <option *ngFor="let item of menuItems" [value]="item.id">
-           {{ item.name }}<span *ngIf="item.price"> - ${{ item.price.toFixed(2) }}</span>
-          </option>
-        </select>
-      </div>
-
-      <!-- Category -->
-      <div class="form-section">
-        <label class="section-label">Category (Optional)</label>
-        <select formControlName="category" class="form-select">
-          <option value="">Select a category</option>
-          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
-        </select>
-      </div>
-
-      <!-- Caption -->
-      <div class="form-section">
-        <label class="section-label">Your Review *</label>
-        <textarea 
-          formControlName="caption"
-          placeholder="Share your experience... What did you love? What could be better?"
-          rows="6"
-          class="form-textarea"
-          [class.error]="postForm.get('caption')?.invalid && postForm.get('caption')?.touched">
-        </textarea>
-        <p class="field-hint" *ngIf="postForm.get('caption')?.invalid && postForm.get('caption')?.touched">
-          Review must be at least 10 characters
-        </p>
       </div>
 
       <!-- Submit Button -->
@@ -97,9 +134,15 @@
         <button type="button" class="btn-cancel" routerLink="/feed" [disabled]="loading">
           Cancel
         </button>
-        <button type="submit" class="btn-submit" [disabled]="loading || postForm.invalid || rating === 0">
-          <span *ngIf="!loading">Post Review</span>
-          <div *ngIf="loading" class="spinner"></div>
+        <button type="submit" class="btn-submit" [disabled]="loading || postForm.invalid">
+          <span *ngIf="!loading">
+            <span class="icon">✓</span>
+            Create Post
+          </span>
+          <div *ngIf="loading" class="btn-loading">
+            <div class="spinner"></div>
+            <span>Creating...</span>
+          </div>
         </button>
       </div>
     </form>

@@ -1,0 +1,323 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.menu-item-detail-container {
+  min-height: 100vh;
+  padding: $spacing-xl;
+  background-color: $color-background-dark;
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.loading {
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-2xl * 2;
+  gap: $spacing-lg;
+  color: $color-gray-medium;
+}
+
+.btn-back {
+  @include button-base;
+  background: transparent;
+  border: 2px solid $color-gray-medium;
+  color: $color-gray-light;
+  padding: $spacing-sm $spacing-lg;
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-xl;
+
+  .icon {
+    font-size: $font-size-lg;
+  }
+
+  &:hover {
+    border-color: $color-metallic-gold;
+    color: $color-metallic-gold;
+  }
+}
+
+.item-header-section {
+  @include card;
+  padding: $spacing-2xl;
+  margin-bottom: $spacing-2xl;
+  border: 2px solid rgba($color-metallic-gold, 0.2);
+}
+
+.item-header-content {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: $spacing-2xl;
+
+  @include respond-to('mobile') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.item-header-image {
+  width: 100%;
+  height: 400px;
+  background: linear-gradient(135deg, $color-royal-blue, $color-deep-navy);
+  background-size: cover;
+  background-position: center;
+  border-radius: $radius-xl;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid rgba($color-metallic-gold, 0.3);
+
+  .image-overlay {
+    position: absolute;
+    inset: 0;
+    @include flex-center;
+    background: rgba($color-deep-navy, 0.5);
+
+    .placeholder-icon {
+      font-size: 6rem;
+    }
+  }
+
+  @include respond-to('mobile') {
+    height: 300px;
+  }
+}
+
+.item-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.item-category-badge {
+  display: inline-block;
+  background: rgba($color-soft-amber, 0.2);
+  color: $color-soft-amber;
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-full;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  align-self: flex-start;
+}
+
+.item-name {
+  font-size: $font-size-4xl;
+  font-weight: 700;
+  color: $color-white;
+  margin: 0;
+  line-height: 1.2;
+
+  @include respond-to('mobile') {
+    font-size: $font-size-3xl;
+  }
+}
+
+.item-description {
+  color: $color-gray-light;
+  font-size: $font-size-lg;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.item-meta-row {
+  display: flex;
+  gap: $spacing-xl;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.item-price {
+  display: flex;
+  align-items: baseline;
+  gap: $spacing-sm;
+
+  .price-label {
+    color: $color-gray-medium;
+    font-size: $font-size-base;
+  }
+
+  .price-value {
+    color: $color-metallic-gold;
+    font-size: $font-size-3xl;
+    font-weight: 700;
+  }
+}
+
+.item-availability {
+  .availability-badge {
+    display: inline-block;
+    padding: $spacing-sm $spacing-lg;
+    border-radius: $radius-full;
+    font-weight: 600;
+    font-size: $font-size-sm;
+    background: rgba($color-error, 0.2);
+    color: $color-error;
+    border: 2px solid $color-error;
+
+    &.available {
+      background: rgba($color-success, 0.2);
+      color: $color-success;
+      border-color: $color-success;
+    }
+  }
+}
+
+.item-rating-section {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-lg;
+  @include glassmorphism(0.05);
+  border-radius: $radius-lg;
+  border: 1px solid rgba($color-metallic-gold, 0.2);
+
+  .stars {
+    display: flex;
+    gap: $spacing-xs;
+  }
+
+  .star {
+    font-size: $font-size-2xl;
+    filter: grayscale(100%);
+    opacity: 0.3;
+
+    &.filled {
+      filter: grayscale(0%);
+      opacity: 1;
+    }
+  }
+
+  .rating-text {
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $color-metallic-gold;
+  }
+
+  .review-count {
+    color: $color-gray-medium;
+    font-size: $font-size-base;
+  }
+}
+
+.venue-info-card {
+  @include glassmorphism(0.05);
+  padding: $spacing-lg;
+  border-radius: $radius-lg;
+  border: 2px solid rgba($color-metallic-gold, 0.2);
+  display: flex;
+  gap: $spacing-md;
+  cursor: pointer;
+  transition: all $transition-base;
+
+  &:hover {
+    border-color: $color-metallic-gold;
+    background: rgba($color-metallic-gold, 0.05);
+    transform: translateX(4px);
+  }
+
+  .venue-icon {
+    font-size: 3rem;
+    flex-shrink: 0;
+  }
+
+  .venue-details {
+    flex: 1;
+
+    h3 {
+      font-size: $font-size-lg;
+      font-weight: 700;
+      color: $color-white;
+      margin: 0 0 $spacing-xs 0;
+    }
+
+    p {
+      color: $color-gray-light;
+      font-size: $font-size-sm;
+      margin: 0 0 $spacing-xs 0;
+    }
+
+    .venue-link {
+      color: $color-metallic-gold;
+      font-size: $font-size-sm;
+      font-weight: 600;
+    }
+  }
+}
+
+.btn-write-review {
+  @include button-base;
+  @include gold-gradient;
+  color: $color-deep-navy;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  box-shadow: $shadow-gold;
+  margin-top: auto;
+  padding: $spacing-lg $spacing-xl;
+  font-size: $font-size-lg;
+
+  .icon {
+    font-size: $font-size-xl;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba($color-metallic-gold, 0.5);
+  }
+}
+
+.btn-primary {
+  @include button-base;
+  @include gold-gradient;
+  color: $color-deep-navy;
+  padding: $spacing-md $spacing-2xl;
+}
+
+// Reviews Section
+.reviews-section {
+  margin-top: $spacing-2xl;
+}
+
+.section-title {
+  font-size: $font-size-2xl;
+  font-weight: 700;
+  color: $color-white;
+  margin: 0 0 $spacing-xl 0;
+  padding-bottom: $spacing-md;
+  border-bottom: 2px solid rgba($color-metallic-gold, 0.2);
+}
+
+.no-reviews {
+  @include card;
+  padding: $spacing-2xl * 2;
+  text-align: center;
+
+  .no-reviews-icon {
+    font-size: 5rem;
+    margin-bottom: $spacing-lg;
+  }
+
+  h3 {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $color-white;
+    margin: 0 0 $spacing-md 0;
+  }
+
+  p {
+    color: $color-gray-light;
+    font-size: $font-size-lg;
+    margin: 0 0 $spacing-xl 0;
+  }
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}

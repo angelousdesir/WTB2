@@ -1,9 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { PostService } from '../../core/services/post.service';
+import { AuthService } from '../../core/services/auth.service';
 import { Post } from '../../core/models/post.model';
 import { PostCardComponent } from '../../shared/components/post-card/post-card.component';
+
+interface CategoryInfo {
+  name: string;
+  displayName: string;
+  icon: string;
+  description: string;
+}
 
 @Component({
   selector: 'app-by-genre',
@@ -13,33 +21,77 @@ import { PostCardComponent } from '../../shared/components/post-card/post-card.c
   styleUrls: ['./by-genre.component.scss']
 })
 export class ByGenreComponent implements OnInit {
-  categories = [
-    { name: 'Appetizers', icon: '🥗', color: '#10B981' },
-    { name: 'Main Course', icon: '🍽️', color: '#F59E0B' },
-    { name: 'Desserts', icon: '🍰', color: '#EC4899' },
-    { name: 'Drinks', icon: '🥤', color: '#3B82F6' },
-    { name: 'Cocktails', icon: '🍹', color: '#8B5CF6' },
-    { name: 'Beer', icon: '🍺', color: '#EAB308' },
-    { name: 'Wine', icon: '🍷', color: '#DC2626' },
-    { name: 'Other', icon: '🍴', color: '#6B7280' }
+  categories: CategoryInfo[] = [
+    { 
+      name: 'Appetizers', 
+      displayName: 'Appetizers', 
+      icon: '🥗',
+      description: 'Start your meal right'
+    },
+    { 
+      name: 'Main Course', 
+      displayName: 'Main Courses', 
+      icon: '🍖',
+      description: 'Hearty and satisfying'
+    },
+    { 
+      name: 'Desserts', 
+      displayName: 'Desserts', 
+      icon: '🍰',
+      description: 'Sweet endings'
+    },
+    { 
+      name: 'Drinks', 
+      displayName: 'Drinks', 
+      icon: '🥤',
+      description: 'Refreshing beverages'
+    },
+    { 
+      name: 'Cocktails', 
+      displayName: 'Cocktails', 
+      icon: '🍹',
+      description: 'Craft cocktails'
+    },
+    { 
+      name: 'Beer', 
+      displayName: 'Beer', 
+      icon: '🍺',
+      description: 'Brews and ales'
+    },
+    { 
+      name: 'Wine', 
+      displayName: 'Wine', 
+      icon: '🍷',
+      description: 'Fine wines'
+    }
   ];
 
-  selectedCategory: string | null = null;
+  selectedCategory: CategoryInfo | null = null;
   categoryPosts: Post[] = [];
   loading = false;
 
-  constructor(private postService: PostService) {}
+  constructor(
+    private postService: PostService,
+    public authService: AuthService,
+    private router: Router
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // Check if user is authenticated
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/login']);
+    }
+  }
 
-  async selectCategory(categoryName: string): Promise<void> {
-    this.selectedCategory = categoryName;
+  async selectCategory(category: CategoryInfo): Promise<void> {
+    this.selectedCategory = category;
     this.loading = true;
 
     try {
-      this.categoryPosts = await this.postService.getPostsByCategory(categoryName);
+      this.categoryPosts = await this.postService.getPostsByCategory(category.name);
     } catch (error) {
       console.error('Error loading category posts:', error);
+      alert('Failed to load posts for this category.');
     } finally {
       this.loading = false;
     }

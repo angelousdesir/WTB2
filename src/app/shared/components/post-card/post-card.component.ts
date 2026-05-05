@@ -6,7 +6,7 @@ import { Post } from '../../../core/models/post.model';
   selector: 'app-post-card',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './post-card.component.html',
+  templateUrl: './post-card.component.html', 
   styleUrls: ['./post-card.component.scss']
 })
 export class PostCardComponent {
@@ -17,14 +17,14 @@ export class PostCardComponent {
   getStarArray(): number[] {
     return Array(5).fill(0).map((_, i) => i + 1);
   }
-
+ 
   onDelete(): void {
     if (confirm('Are you sure you want to delete this post?')) {
       this.deletePost.emit(this.post.id);
     }
   }
 
-  formatDate(dateString: string): string {
+  getFormattedDate(dateString: string): string {
     const date = new Date(dateString);
     const now = new Date();
     const diffTime = Math.abs(now.getTime() - date.getTime());

@@ -265,6 +265,10 @@ export class ByFoodItemComponent implements OnInit {
     this.router.navigate(['/by-bar', venueId]);
   }
 
+  navigateToMenuItem(itemId: string): void {
+  this.router.navigate(['/menu-item', itemId]);
+  }
+
   onMenuItemImageSelect(event: Event): void {
   const input = event.target as HTMLInputElement;
   if (input.files && input.files[0]) {

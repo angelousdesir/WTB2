@@ -2,45 +2,65 @@
   <div class="content-wrapper">
     <!-- Header -->
     <div class="page-header">
-      <h1>Browse by Category</h1>
-      <p>Explore reviews organized by food and drink types</p>
+      <h1>Browse by Genre</h1>
+      <p>Explore food and drinks by category</p>
     </div>
 
-    <!-- Categories Grid -->
-    <div class="categories-grid">
-      <div 
-        *ngFor="let category of categories" 
-        class="category-card"
-        [class.selected]="selectedCategory === category.name"
-        (click)="selectCategory(category.name)">
-        
-        <div class="category-icon" [style.background]="'linear-gradient(135deg, ' + category.color + ', ' + category.color + '99)'">
-          <span>{{ category.icon }}</span>
+    <!-- Category Selection -->
+    <div class="categories-section" *ngIf="!selectedCategory">
+      <div class="categories-grid">
+        <div 
+          *ngFor="let category of categories" 
+          class="category-card"
+          (click)="selectCategory(category)">
+          <div class="category-icon">{{ category.icon }}</div>
+          <h3 class="category-name">{{ category.displayName }}</h3>
+          <p class="category-description">{{ category.description }}</p>
+          <div class="category-arrow">→</div>
         </div>
-        <h3>{{ category.name }}</h3>
       </div>
     </div>
 
-    <!-- Category Posts -->
+    <!-- Category Posts View -->
     <div class="category-posts-section" *ngIf="selectedCategory">
-      <div class="section-header">
-        <h2>{{ selectedCategory }}</h2>
-        <button class="btn-clear" (click)="clearSelection()">← Back to Categories</button>
+      <button class="btn-back" (click)="clearSelection()">
+        <span class="icon">←</span>
+        Back to Categories
+      </button>
+
+      <div class="category-header">
+        <div class="category-icon-large">{{ selectedCategory.icon }}</div>
+        <div class="category-info">
+          <h2>{{ selectedCategory.displayName }}</h2>
+          <p>{{ selectedCategory.description }}</p>
+        </div>
       </div>
 
+      <!-- Loading State -->
       <div *ngIf="loading" class="loading">
         <div class="spinner"></div>
-        <p>Loading {{ selectedCategory.toLowerCase() }}...</p>
+        <p>Loading {{ selectedCategory.displayName }}...</p>
       </div>
 
+      <!-- Posts List -->
+      <div *ngIf="!loading && categoryPosts.length > 0" class="posts-list">
+        <div class="posts-count">
+          <span>{{ categoryPosts.length }} review{{ categoryPosts.length !== 1 ? 's' : '' }}</span>
+        </div>
+        <app-post-card 
+          *ngFor="let post of categoryPosts" 
+          [post]="post">
+        </app-post-card>
+      </div>
+
+      <!-- Empty State -->
       <div *ngIf="!loading && categoryPosts.length === 0" class="empty-state">
-        <div class="empty-icon">📭</div>
-        <p>No reviews in this category yet</p>
-        <button class="btn-primary" routerLink="/create-post">Be the First to Review</button>
-      </div>
-
-      <div class="posts-grid" *ngIf="!loading && categoryPosts.length > 0">
-        <app-post-card *ngFor="let post of categoryPosts" [post]="post"></app-post-card>
+        <div class="empty-icon">🔍</div>
+        <h3>No reviews yet</h3>
+        <p>Be the first to review a {{ selectedCategory.displayName.toLowerCase() }} item!</p>
+        <button class="btn-primary" routerLink="/by-food-item">
+          Browse Menu Items
+        </button>
       </div>
     </div>
   </div>

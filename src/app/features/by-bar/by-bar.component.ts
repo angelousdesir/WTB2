@@ -378,15 +378,10 @@ async selectVenue(venue: Venue): Promise<void> {
       }
     );
 
-    // Update in local arrays
-    const allIndex = this.allMenuItems.findIndex(i => i.id === updatedItem.id);
-    if (allIndex !== -1) {
-      this.allMenuItems[allIndex] = updatedItem;
-    }
-
-    const filteredIndex = this.menuItems.findIndex(i => i.id === updatedItem.id);
-    if (filteredIndex !== -1) {
-      this.menuItems[filteredIndex] = updatedItem;
+    // Update in local array (venueMenuItems, not allMenuItems)
+    const index = this.venueMenuItems.findIndex(i => i.id === updatedItem.id);
+    if (index !== -1) {
+      this.venueMenuItems[index] = updatedItem;
     }
 
     alert('Menu item updated successfully!');
