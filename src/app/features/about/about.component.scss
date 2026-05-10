@@ -125,3 +125,404 @@
     }
   }
 }
+
+
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.about-container {
+  min-height: 100vh;
+  background-color: $color-background-dark;
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $spacing-2xl $spacing-xl;
+
+  @include respond-to('mobile') {
+    padding: $spacing-xl $spacing-md;
+  }
+}
+
+// Hero Section
+.hero-section {
+  text-align: center;
+  padding: $spacing-2xl 0;
+  margin-bottom: $spacing-2xl;
+
+  h1 {
+    font-size: $font-size-4xl;
+    font-weight: 700;
+    color: $color-white;
+    margin: 0 0 $spacing-lg 0;
+    @include gold-gradient;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    @include respond-to('mobile') {
+      font-size: $font-size-3xl;
+    }
+  }
+
+  .hero-tagline {
+    font-size: $font-size-xl;
+    color: $color-gray-light;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+
+    @include respond-to('mobile') {
+      font-size: $font-size-lg;
+    }
+  }
+}
+
+// Section Base
+.section {
+  margin-bottom: $spacing-2xl * 2;
+
+  h2 {
+    font-size: $font-size-3xl;
+    font-weight: 700;
+    color: $color-white;
+    margin: 0 0 $spacing-xl 0;
+    text-align: center;
+
+    @include respond-to('mobile') {
+      font-size: $font-size-2xl;
+    }
+  }
+
+  p {
+    color: $color-gray-light;
+    font-size: $font-size-lg;
+    line-height: 1.8;
+    margin-bottom: $spacing-lg;
+  }
+}
+
+// Mission Section
+.mission-section {
+  @include card;
+  padding: $spacing-2xl;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-2xl;
+  align-items: center;
+
+  @include respond-to('mobile') {
+    grid-template-columns: 1fr;
+    padding: $spacing-xl;
+  }
+
+  .section-content {
+    h2 {
+      text-align: left;
+      margin-bottom: $spacing-lg;
+    }
+  }
+}
+
+// Image Placeholder
+.section-image {
+  .image-placeholder {
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(135deg, $color-royal-blue, $color-deep-navy);
+    border-radius: $radius-xl;
+    @include flex-center;
+    border: 2px solid rgba($color-metallic-gold, 0.3);
+
+    @include respond-to('mobile') {
+      height: 200px;
+    }
+
+    .placeholder-icon {
+      font-size: 6rem;
+
+      @include respond-to('mobile') {
+        font-size: 4rem;
+      }
+    }
+  }
+}
+
+// How It Works Section
+.how-it-works-section {
+  text-align: center;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-xl;
+  margin-top: $spacing-2xl;
+
+  @include respond-to('mobile') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.feature-card {
+  @include card;
+  padding: $spacing-2xl;
+  text-align: center;
+  transition: all $transition-base;
+  border: 2px solid rgba($color-metallic-gold, 0.1);
+
+  &:hover {
+    transform: translateY(-8px);
+    border-color: $color-metallic-gold;
+    box-shadow: $shadow-xl, $shadow-gold;
+  }
+
+  .feature-icon {
+    font-size: 4rem;
+    margin-bottom: $spacing-lg;
+  }
+
+  h3 {
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $color-white;
+    margin: 0 0 $spacing-md 0;
+  }
+
+  p {
+    color: $color-gray-light;
+    font-size: $font-size-base;
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+// Owners Section
+.owners-section {
+  @include card;
+  padding: $spacing-2xl;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-2xl;
+  align-items: center;
+
+  @include respond-to('mobile') {
+    grid-template-columns: 1fr;
+    padding: $spacing-xl;
+  }
+
+  .section-content {
+    h2 {
+      text-align: left;
+      margin-bottom: $spacing-lg;
+    }
+
+    .btn-primary {
+      margin-top: $spacing-lg;
+    }
+  }
+}
+
+// Stats Section
+.stats-section {
+  @include card;
+  padding: $spacing-2xl;
+  background: linear-gradient(135deg, rgba($color-royal-blue, 0.2), rgba($color-deep-navy, 0.2));
+  border: 2px solid rgba($color-metallic-gold, 0.3);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-xl;
+
+  @include respond-to('mobile') {
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-md;
+  }
+}
+
+.stat-card {
+  text-align: center;
+  padding: $spacing-xl;
+  @include glassmorphism(0.05);
+  border-radius: $radius-lg;
+  border: 1px solid rgba($color-metallic-gold, 0.2);
+  transition: all $transition-base;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: $color-metallic-gold;
+  }
+
+  .stat-number {
+    font-size: $font-size-4xl;
+    font-weight: 700;
+    @include gold-gradient;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: $spacing-xs;
+
+    @include respond-to('mobile') {
+      font-size: $font-size-3xl;
+    }
+  }
+
+  .stat-label {
+    color: $color-gray-light;
+    font-size: $font-size-base;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    @include respond-to('mobile') {
+      font-size: $font-size-sm;
+    }
+  }
+}
+
+// CTA Section (Join Community / Welcome Back)
+.cta-section {
+  @include card;
+  padding: $spacing-2xl * 2;
+  text-align: center;
+  background: linear-gradient(135deg, rgba($color-royal-blue, 0.3), rgba($color-deep-navy, 0.3));
+  border: 2px solid rgba($color-metallic-gold, 0.3);
+
+  @include respond-to('mobile') {
+    padding: $spacing-2xl $spacing-lg;
+  }
+
+  h2 {
+    font-size: $font-size-3xl;
+    margin-bottom: $spacing-lg;
+
+    @include respond-to('mobile') {
+      font-size: $font-size-2xl;
+    }
+  }
+
+  p {
+    font-size: $font-size-xl;
+    color: $color-gray-light;
+    max-width: 600px;
+    margin: 0 auto $spacing-xl auto;
+
+    @include respond-to('mobile') {
+      font-size: $font-size-lg;
+    }
+  }
+}
+
+.cta-buttons {
+  display: flex;
+  gap: $spacing-md;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  @include respond-to('mobile') {
+    flex-direction: column;
+  }
+}
+
+// Values Section
+.values-section {
+  text-align: center;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-lg;
+  margin-top: $spacing-2xl;
+
+  @include respond-to('mobile') {
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.value-card {
+  @include card;
+  padding: $spacing-xl;
+  text-align: center;
+  transition: all $transition-base;
+  border: 2px solid rgba($color-metallic-gold, 0.1);
+
+  &:hover {
+    transform: translateY(-8px);
+    border-color: $color-metallic-gold;
+    box-shadow: $shadow-xl;
+  }
+
+  .value-icon {
+    font-size: 3.5rem;
+    margin-bottom: $spacing-md;
+  }
+
+  h3 {
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $color-white;
+    margin: 0 0 $spacing-sm 0;
+  }
+
+  p {
+    color: $color-gray-light;
+    font-size: $font-size-sm;
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+// Buttons
+.btn-primary {
+  @include button-base;
+  @include gold-gradient;
+  color: $color-deep-navy;
+  padding: $spacing-md $spacing-2xl;
+  font-size: $font-size-base;
+  font-weight: 700;
+  box-shadow: $shadow-gold;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba($color-metallic-gold, 0.5);
+  }
+}
+
+.btn-secondary {
+  @include button-base;
+  background: transparent;
+  border: 2px solid $color-metallic-gold;
+  color: $color-metallic-gold;
+  padding: $spacing-md $spacing-2xl;
+  font-size: $font-size-base;
+  font-weight: 700;
+
+  &:hover {
+    background: rgba($color-metallic-gold, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section {
+  animation: fadeIn 0.6s ease-out;
+}

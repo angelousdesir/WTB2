@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { Location } from '@angular/common';
 import { PostService } from '../../core/services/post.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Post } from '../../core/models/post.model';
@@ -73,7 +74,8 @@ export class ByGenreComponent implements OnInit {
   constructor(
     private postService: PostService,
     public authService: AuthService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -100,5 +102,9 @@ export class ByGenreComponent implements OnInit {
   clearSelection(): void {
     this.selectedCategory = null;
     this.categoryPosts = [];
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }

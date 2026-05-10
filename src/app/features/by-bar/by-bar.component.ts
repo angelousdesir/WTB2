@@ -183,6 +183,18 @@ async selectVenue(venue: Venue): Promise<void> {
     this.router.navigate(['/menu-upload'], { queryParams: { venueId: this.selectedVenue.id } });
   }
 
+
+   navigateToWriteReview(menuItem: MenuItem): void {
+    if (!this.selectedVenue) return;
+    
+    this.router.navigate(['/create-post'], {
+      queryParams: {
+        venueId: this.selectedVenue.id,
+        menuItemId: menuItem.id
+      }
+    });
+  }
+
   async upgradeToVenueOwner(): Promise<void> {
     this.upgradingRole = true;
     try {

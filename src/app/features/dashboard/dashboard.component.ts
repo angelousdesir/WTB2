@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { Location } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 import { VenueService } from '../../core/services/venue.service';
 import { PostService } from '../../core/services/post.service';
@@ -39,7 +40,8 @@ export class DashboardComponent implements OnInit {
     public authService: AuthService,
     private venueService: VenueService,
     private postService: PostService,
-    private router: Router
+    private router: Router,
+    private location: Location,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -98,5 +100,9 @@ export class DashboardComponent implements OnInit {
 
   navigateToVenue(venueId: string): void {
     this.router.navigate(['/by-bar', venueId]);
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }

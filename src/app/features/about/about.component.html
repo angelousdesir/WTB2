@@ -67,10 +67,51 @@
       </section>
     </div>
 
-    <div class="cta-section">
+    <!-- Join Community Section - ONLY SHOW IF NOT LOGGED IN -->
+    <div class="section cta-section" *ngIf="!authService.isAuthenticated()">
       <h2>Join Our Community</h2>
-      <p>Be part of the food revolution. Share your experiences and discover amazing dishes.</p>
-      <button class="btn-cta" routerLink="/register">Get Started Today</button>
+      <p>Start discovering and sharing the best food and drinks in your area today.</p>
+      <div class="cta-buttons">
+        <button class="btn-primary" routerLink="/register">Sign Up Free</button>
+        <button class="btn-secondary" routerLink="/login">Sign In</button>
+      </div>
+    </div>
+
+    <!-- Already Logged In Section - SHOW ONLY IF LOGGED IN -->
+    <div class="section cta-section" *ngIf="authService.isAuthenticated()">
+      <h2>Welcome Back, {{ authService.currentUserValue?.username || 'Foodie' }}! 🎉</h2>
+      <p>You're already part of our community. Keep exploring and sharing your experiences.</p>
+      <div class="cta-buttons">
+        <button class="btn-primary" routerLink="/dashboard">Go to Dashboard</button>
+        <button class="btn-secondary" routerLink="/create-post">Write a Review</button>
+      </div>
+    </div>
+
+    <!-- Values Section -->
+    <div class="section values-section">
+      <h2>Our Values</h2>
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-icon">💯</div>
+          <h3>Authenticity</h3>
+          <p>We believe in honest, genuine reviews from real people, not paid promotions.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🌟</div>
+          <h3>Quality</h3>
+          <p>We celebrate culinary excellence and help you find the best dining experiences.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">👥</div>
+          <h3>Community</h3>
+          <p>We foster a supportive community where food lovers can connect and share.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🎯</div>
+          <h3>Transparency</h3>
+          <p>We provide clear, unbiased information to help you make informed choices.</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>

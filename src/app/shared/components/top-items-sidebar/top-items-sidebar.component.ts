@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { MenuParserService } from '../../../core/services/menu-parser.service';
 import { MenuItem } from '../../../core/models/menu-item.model';
 
@@ -14,9 +15,17 @@ export class TopItemsSidebarComponent implements OnInit {
   topItems: MenuItem[] = [];
   loading = true;
 
-  constructor(private menuParserService: MenuParserService) {}
+  constructor(
+    private menuParserService: MenuParserService,
+    private router: Router
+  ) {}
 
   async ngOnInit(): Promise<void> {
+    await this.loadTopItems();
+  }
+
+  async loadTopItems(): Promise<void> {
+    this.loading = true;
     try {
       this.topItems = await this.menuParserService.getTopMenuItems(5);
     } catch (error) {
@@ -24,5 +33,9 @@ export class TopItemsSidebarComponent implements OnInit {
     } finally {
       this.loading = false;
     }
+  }
+
+  navigateToMenuItem(itemId: string): void {
+    this.router.navigate(['/menu-item', itemId]);
   }
 }

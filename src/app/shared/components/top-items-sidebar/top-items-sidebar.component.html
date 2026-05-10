@@ -8,7 +8,14 @@
   </div>
 
   <div class="items-list" *ngIf="!loading">
-    <div *ngFor="let item of topItems; let i = index" class="top-item">
+    <div 
+      *ngFor="let item of topItems; let i = index" 
+      class="top-item"
+      (click)="navigateToMenuItem(item.id)"
+      role="button"
+      tabindex="0"
+      (keydown.enter)="navigateToMenuItem(item.id)"
+      (keydown.space)="navigateToMenuItem(item.id)">
       <div class="item-rank">{{ i + 1 }}</div>
       
       <div 
@@ -31,6 +38,14 @@
           </span>
         </div>
       </div>
+
+      <div class="item-arrow">→</div>
+    </div>
+
+    <div class="view-all-link" *ngIf="topItems.length > 0">
+      <a routerLink="/by-food-item" class="link-button">
+        View All Items →
+      </a>
     </div>
   </div>
 </div>

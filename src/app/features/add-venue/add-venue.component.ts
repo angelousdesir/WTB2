@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { VenueService } from '../../core/services/venue.service';
 import { AuthService } from '../../core/services/auth.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-add-venue',
@@ -65,7 +66,8 @@ export class AddVenueComponent implements OnInit {
     private fb: FormBuilder,
     private venueService: VenueService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {
     this.venueForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
@@ -167,5 +169,9 @@ export class AddVenueComponent implements OnInit {
       return field.hasError(errorType) && (field.dirty || field.touched);
     }
     return field.invalid && (field.dirty || field.touched);
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }

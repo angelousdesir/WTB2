@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { PostService } from '../../core/services/post.service';
 import { VenueService } from '../../core/services/venue.service';
 import { MenuParserService } from '../../core/services/menu-parser.service';
@@ -33,7 +34,8 @@ export class CreatePostComponent implements OnInit {
     private menuParserService: MenuParserService,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {
     this.postForm = this.fb.group({
       venue_id: ['', Validators.required],
@@ -174,5 +176,9 @@ export class CreatePostComponent implements OnInit {
 
   setRating(rating: number): void {
     this.postForm.patchValue({ rating });
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }

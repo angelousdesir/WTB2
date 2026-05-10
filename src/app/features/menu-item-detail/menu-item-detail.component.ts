@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Location } from '@angular/common';
 import { MenuParserService } from '../../core/services/menu-parser.service';
 import { PostService } from '../../core/services/post.service';
 import { VenueService } from '../../core/services/venue.service';
@@ -27,6 +28,7 @@ export class MenuItemDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private menuParserService: MenuParserService,
     private postService: PostService,
     private venueService: VenueService,
@@ -81,6 +83,10 @@ export class MenuItemDetailComponent implements OnInit {
         venueId: this.menuItem?.venue_id 
       } 
     });
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   get ratingStars(): number[] {

@@ -1421,3 +1421,70 @@
     margin-bottom: $spacing-lg;
   }
 }
+
+
+// Menu item review action
+.menu-item-review-action {
+  margin-top: $spacing-md;
+  padding-top: $spacing-md;
+  border-top: 1px solid rgba($color-metallic-gold, 0.1);
+}
+
+.btn-write-review {
+  @include button-base;
+  @include gold-gradient;
+  color: $color-deep-navy;
+  width: 100%;
+  padding: $spacing-sm $spacing-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-xs;
+  font-size: $font-size-sm;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba($color-metallic-gold, 0.3);
+  transition: all $transition-base;
+
+  .icon {
+    font-size: $font-size-base;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($color-metallic-gold, 0.5);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-sign-in-review {
+  @include button-base;
+  background: transparent;
+  border: 2px solid rgba($color-metallic-gold, 0.5);
+  color: $color-metallic-gold;
+  width: 100%;
+  padding: $spacing-sm $spacing-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-xs;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  transition: all $transition-base;
+
+  .icon {
+    font-size: $font-size-base;
+  }
+
+  &:hover {
+    background: rgba($color-metallic-gold, 0.1);
+    border-color: $color-metallic-gold;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}

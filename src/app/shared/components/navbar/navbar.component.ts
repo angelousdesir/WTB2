@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { User } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-navbar',
@@ -11,31 +10,59 @@ import { User } from '../../../core/models/user.model';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements OnInit {
-  currentUser: User | null = null;
-  isMenuOpen = false;
+export class NavbarComponent {
+  showMobileMenu = false;
+  showAccountMenu = false;
 
   constructor(
     public authService: AuthService,
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.authService.currentUser$.subscribe(user => {
-      this.currentUser = user;
-    });
+  get currentUser() {
+    return this.authService.currentUserValue;
   }
 
-  toggleMenu(): void {
-    this.isMenuOpen = !this.isMenuOpen;
+  getUserInitial(): string {
+    if (!this.currentUser) return 'U';
+    
+    const username = this.currentUser.username || this.currentUser.email;
+    return username ? username.charAt(0).toUpperCase() : 'U';
+  }
+
+  toggleMobileMenu(): void {
+    this.showMobileMenu = !this.showMobileMenu;
+    if (this.showMobileMenu) {
+      this.showAccountMenu = false;
+    }
+  }
+
+  toggleAccountMenu(): void {
+    this.showAccountMenu = !this.showAccountMenu;
+    if (this.showAccountMenu) {
+      this.showMobileMenu = false;
+    }
+  }
+
+  closeMenus(): void {
+    this.showMobileMenu = false;
+    this.showAccountMenu = false;
+  }
+
+  isOwner(): boolean {
+    return this.currentUser?.role === 'owner' || this.currentUser?.role === 'admin';
   }
 
   async logout(): Promise<void> {
-    await this.authService.signOut();
-  }
-
-  navigateTo(path: string): void {
-    this.router.navigate([path]);
-    this.isMenuOpen = false;
+    try {
+      await this.authService.signOut();
+      this.closeMenus();
+      this.router.navigate(['/home']);
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Force navigation even if there's an error
+      this.closeMenus();
+      this.router.navigate(['/home']);
+    }
   }
 }

@@ -1,19 +1,19 @@
 @import '../../../styles/variables';
 @import '../../../styles/mixins';
 
-.feed-container {
+.my-reviews-container {
   min-height: 100vh;
   padding: $spacing-xl;
   background-color: $color-background-dark;
 }
 
 .content-wrapper {
-  max-width: 1400px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
-// Feed Header
-.feed-header {
+// Page Header
+.page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -25,19 +25,27 @@
     align-items: flex-start;
   }
 
-  h1 {
-    font-size: $font-size-3xl;
-    font-weight: 700;
-    color: $color-white;
-    margin: 0;
+  .header-content {
+    h1 {
+      font-size: $font-size-3xl;
+      font-weight: 700;
+      color: $color-white;
+      margin: 0 0 $spacing-xs 0;
 
-    @include respond-to('mobile') {
-      font-size: $font-size-2xl;
+      @include respond-to('mobile') {
+        font-size: $font-size-2xl;
+      }
+    }
+
+    p {
+      color: $color-gray-medium;
+      font-size: $font-size-base;
+      margin: 0;
     }
   }
 }
 
-.btn-create-post {
+.btn-create-review {
   @include button-base;
   @include gold-gradient;
   color: $color-deep-navy;
@@ -46,9 +54,7 @@
   align-items: center;
   gap: $spacing-sm;
   font-weight: 700;
-  font-size: $font-size-base;
   box-shadow: $shadow-gold;
-  white-space: nowrap;
   flex-shrink: 0;
 
   @include respond-to('mobile') {
@@ -57,42 +63,68 @@
   }
 
   .icon {
-    font-size: $font-size-2xl;
-    font-weight: 700;
+    font-size: $font-size-lg;
   }
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba($color-metallic-gold, 0.5);
-  }
-
-  &:active {
-    transform: translateY(0);
+    box-shadow: 0 0 20px rgba($color-metallic-gold, 0.5);
   }
 }
 
-// Feed Content Layout
-.feed-content {
+// Stats Section
+.stats-section {
   display: grid;
-  grid-template-columns: 1fr 350px;
-  gap: $spacing-2xl;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-lg;
+  margin-bottom: $spacing-2xl;
 
-  @media (max-width: 1200px) {
+  @include respond-to('mobile') {
     grid-template-columns: 1fr;
   }
 }
 
-.posts-section {
-  min-width: 0;
-}
+.stat-card {
+  @include card;
+  padding: $spacing-xl;
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  border: 2px solid rgba($color-metallic-gold, 0.2);
+  transition: all $transition-base;
 
-.sidebar {
-  @media (max-width: 1200px) {
-    display: none;
+  &:hover {
+    border-color: $color-metallic-gold;
+    transform: translateY(-4px);
+    box-shadow: $shadow-lg;
+  }
+
+  .stat-icon {
+    font-size: 3rem;
+    flex-shrink: 0;
+  }
+
+  .stat-info {
+    flex: 1;
+  }
+
+  .stat-value {
+    font-size: $font-size-3xl;
+    font-weight: 700;
+    color: $color-metallic-gold;
+    margin-bottom: $spacing-xs;
+  }
+
+  .stat-label {
+    font-size: $font-size-sm;
+    color: $color-gray-medium;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
   }
 }
 
-// Loading State
+// Loading
 .loading {
   @include flex-center;
   flex-direction: column;
@@ -107,11 +139,6 @@
     border-top-color: $color-metallic-gold;
     border-radius: 50%;
     animation: spin 1s linear infinite;
-  }
-
-  p {
-    font-size: $font-size-lg;
-    margin: 0;
   }
 }
 
@@ -152,7 +179,6 @@
     @include gold-gradient;
     color: $color-deep-navy;
     padding: $spacing-md $spacing-2xl;
-    font-weight: 700;
 
     &:hover {
       transform: translateY(-2px);
@@ -161,12 +187,28 @@
   }
 }
 
-// Posts List
-.posts-list {
+// Reviews Section
+.reviews-section {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.section-header {
+  margin-bottom: $spacing-xl;
+  padding-bottom: $spacing-md;
+  border-bottom: 2px solid rgba($color-metallic-gold, 0.2);
+
+  h2 {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $color-white;
+    margin: 0;
+  }
+}
+
+.reviews-list {
   display: flex;
   flex-direction: column;
-  gap: $spacing-xl;
-  animation: fadeIn 0.5s ease-out;
+  gap: $spacing-lg;
 }
 
 @keyframes fadeIn {
@@ -177,41 +219,5 @@
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-// Loading More
-.loading-more {
-  @include flex-center;
-  flex-direction: column;
-  padding: $spacing-xl;
-  gap: $spacing-md;
-  color: $color-gray-medium;
-
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid rgba($color-metallic-gold, 0.2);
-    border-top-color: $color-metallic-gold;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-
-  p {
-    font-size: $font-size-base;
-    margin: 0;
-  }
-}
-
-// End of Feed
-.end-of-feed {
-  text-align: center;
-  padding: $spacing-xl;
-  color: $color-gray-medium;
-
-  p {
-    font-size: $font-size-base;
-    margin: 0;
-    font-style: italic;
   }
 }

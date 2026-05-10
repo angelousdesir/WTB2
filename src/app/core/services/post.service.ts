@@ -229,4 +229,28 @@ async getPostsByCategory(category: string): Promise<Post[]> {
 
   return this.mapPostsWithRelations(data);
   }
+
+
+  /**
+ * Get posts by a specific user
+ */
+async getPostsByUser(userId: string): Promise<Post[]> {
+  const { data, error } = await this.supabaseService.client
+    .from('posts')
+     .select(`
+      *,
+      user:users(id, username, email),
+      venue:venues(id, name, city, state),
+      menu_item:menu_items!inner(id, name, category, price)
+    `)
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching user posts:', error);
+    throw error;
+  }
+
+  return this.mapPostsWithRelations(data);
+  }
 }

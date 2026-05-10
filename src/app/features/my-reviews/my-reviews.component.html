@@ -1,0 +1,72 @@
+<div class="my-reviews-container">
+  <div class="content-wrapper">
+    <!-- Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <h1>My Reviews</h1>
+        <p>All your food and drink reviews in one place</p>
+      </div>
+      <button class="btn-create-review" routerLink="/create-post">
+        <span class="icon">✍️</span>
+        Write New Review
+      </button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-section">
+      <div class="stat-card">
+        <div class="stat-icon">📝</div>
+        <div class="stat-info">
+          <div class="stat-value">{{ stats.totalReviews }}</div>
+          <div class="stat-label">Total Reviews</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-info">
+          <div class="stat-value">{{ stats.averageRating.toFixed(1) }}</div>
+          <div class="stat-label">Average Rating</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏪</div>
+        <div class="stat-info">
+          <div class="stat-value">{{ stats.venuesReviewed }}</div>
+          <div class="stat-label">Venues Reviewed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading your reviews...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && myPosts.length === 0" class="empty-state">
+      <div class="empty-icon">📝</div>
+      <h2>No reviews yet</h2>
+      <p>You haven't written any reviews. Start sharing your food and drink experiences!</p>
+      <button class="btn-primary" routerLink="/create-post">
+        Write Your First Review
+      </button>
+    </div>
+
+    <!-- Reviews List -->
+    <div class="reviews-section" *ngIf="!loading && myPosts.length > 0">
+      <div class="section-header">
+        <h2>Your Reviews ({{ myPosts.length }})</h2>
+      </div>
+      
+      <div class="reviews-list">
+        <app-post-card 
+          *ngFor="let post of myPosts" 
+          [post]="post"
+          (edit)="onEditPost($event)"
+          (delete)="onDeletePost($event)">
+        </app-post-card>
+      </div>
+    </div>
+  </div>
+</div>

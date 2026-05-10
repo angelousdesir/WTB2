@@ -8,7 +8,7 @@
 
     <div *ngIf="!loading && menuItem">
       <!-- Back Button -->
-      <button class="btn-back" routerLink="/by-food-item">
+      <button class="btn-back" (click)="goBack()" routerLink="/by-food-item">
         <span class="icon">←</span>
         Back to Browse
       </button>

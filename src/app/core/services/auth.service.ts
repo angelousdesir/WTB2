@@ -241,15 +241,16 @@ async signIn(email: string, password: string): Promise<void> {
   /**
    * Sign out current user
    */
-  async signOut(): Promise<void> {
-    try {
-      await this.supabaseService.client.auth.signOut();
-      this.currentUserSubject.next(null);
-      this.router.navigate(['/login']);
-    } catch (error) {
-      console.error('Sign out error:', error);
-    }
+async signOut(): Promise<void> {
+  try {
+    await this.supabaseService.client.auth.signOut();
+    this.currentUserSubject.next(null);
+  } catch (error) {
+    console.error('Error signing out:', error);
+    // Even if there's an error, clear the local state
+    this.currentUserSubject.next(null);
   }
+}
 
   /**
    * Update user role

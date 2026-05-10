@@ -1,43 +1,50 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Post } from '../../../core/models/post.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-post-card',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './post-card.component.html', 
+  templateUrl: './post-card.component.html',
   styleUrls: ['./post-card.component.scss']
 })
 export class PostCardComponent {
   @Input() post!: Post;
-  @Input() showDelete = false;
-  @Output() deletePost = new EventEmitter<string>();
+  @Output() edit = new EventEmitter<Post>();
+  @Output() delete = new EventEmitter<Post>();
 
-  getStarArray(): number[] {
-    return Array(5).fill(0).map((_, i) => i + 1);
+  constructor(private authService: AuthService) {}
+
+  get canEdit(): boolean {
+    const currentUser = this.authService.currentUserValue;
+    if (!currentUser) return false;
+    
+    return currentUser.id === this.post.user_id || currentUser.role === 'admin';
   }
- 
+
+  getUserInitial(): string {
+    const username = this.post.user?.username || this.post.user?.email || 'A';
+    return username.charAt(0).toUpperCase();
+  }
+
+  getFormattedDate(): string {
+    const date = new Date(this.post.created_at);
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  }
+
+  onEdit(): void {
+    this.edit.emit(this.post);
+  }
+
   onDelete(): void {
-    if (confirm('Are you sure you want to delete this post?')) {
-      this.deletePost.emit(this.post.id);
-    }
-  }
-
-  getFormattedDate(dateString: string): string {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - date.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) {
-      return 'Today';
-    } else if (diffDays === 1) {
-      return 'Yesterday';
-    } else if (diffDays < 7) {
-      return `${diffDays} days ago`;
-    } else {
-      return date.toLocaleDateString();
+    if (confirm(`Are you sure you want to delete "${this.post.title}"?`)) {
+      this.delete.emit(this.post);
     }
   }
 }

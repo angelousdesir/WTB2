@@ -1,90 +1,178 @@
 <nav class="navbar">
   <div class="navbar-container">
     <!-- Logo -->
-    <div class="navbar-logo" (click)="navigateTo('/home')">
-      <div class="logo-icon">
-        <span class="logo-text">WTB</span>
-      </div>
-      <span class="logo-title">Who's Tha Best</span>
+    <a routerLink="/" class="navbar-logo" (click)="closeMenus()">
+      <span class="logo-icon">🍸</span>
+      <span class="logo-text">Who's Tha Best</span>
+    </a>
+
+    <!-- Desktop Navigation (Centered) -->
+    <div class="navbar-menu">
+      <a routerLink="/by-bar" class="nav-link" routerLinkActive="active" (click)="closeMenus()">
+        Venues
+      </a>
+      <a routerLink="/by-food-item" class="nav-link" routerLinkActive="active" (click)="closeMenus()">
+        Food Items
+      </a>
+      <a routerLink="/by-genre" class="nav-link" routerLinkActive="active" (click)="closeMenus()" *ngIf="authService.isAuthenticated()">
+        By Genre
+      </a>
+      <a routerLink="/feed" class="nav-link" routerLinkActive="active" (click)="closeMenus()" *ngIf="authService.isAuthenticated()">
+        Reviews
+      </a>
+      <a routerLink="/menu-upload" class="nav-link" routerLinkActive="active" (click)="closeMenus()" *ngIf="isOwner()">
+        Upload Menu
+      </a>
+      <a routerLink="/about" class="nav-link" routerLinkActive="active" (click)="closeMenus()">
+        About
+      </a>
     </div>
 
-    <!-- Desktop Navigation -->
-    <div class="navbar-menu desktop-menu">
-      <a routerLink="/home" routerLinkActive="active" class="nav-link">Home</a>
-      <a routerLink="/by-food-item" routerLinkActive="active" class="nav-link">By Food Item</a>
-      <a routerLink="/by-bar" routerLinkActive="active" class="nav-link">By Bar</a>
-      <a routerLink="/by-genre" routerLinkActive="active" class="nav-link">By Genre</a>
-      <a routerLink="/about" routerLinkActive="active" class="nav-link">About</a>
-      <a routerLink="/contact" routerLinkActive="active" class="nav-link">Contact</a>
-    </div>
-
-    <!-- Right Side Actions -->
+    <!-- Desktop Auth Buttons -->
     <div class="navbar-actions">
-      <ng-container *ngIf="currentUser; else loginButtons">
-        <!-- Create Post Button -->
-        <button class="btn-create" (click)="navigateTo('/create-post')">
-          <span class="icon">+</span>
-          <span class="text">Create Post</span>
+      <!-- Not Logged In -->
+      <div class="auth-buttons" *ngIf="!authService.isAuthenticated()">
+        <a routerLink="/login" class="btn-login">Sign In</a>
+        <a routerLink="/register" class="btn-register">Sign Up</a>
+      </div>
+
+      <!-- Logged In - Account Menu -->
+      <div class="account-section" *ngIf="authService.isAuthenticated()">
+        <button class="account-btn" (click)="toggleAccountMenu()">
+          <div class="account-avatar">
+            {{ getUserInitial() }}
+          </div>
+          <span class="account-name">{{ currentUser?.username || currentUser?.email || 'User' }}</span>
+          <span class="dropdown-arrow" [class.open]="showAccountMenu">▼</span>
         </button>
 
-        <!-- User Avatar & Dropdown -->
-        <div class="user-menu">
-          <div class="user-avatar" (click)="toggleMenu()">
-            <img *ngIf="currentUser.avatar_url" [src]="currentUser.avatar_url" alt="Avatar">
-            <span *ngIf="!currentUser.avatar_url" class="avatar-placeholder">
-              <!--{{ currentUser.username?.charAt(0).toUpperCase() || 'U' }}-->
-            </span>
+        <!-- Account Dropdown -->
+        <div class="account-dropdown" *ngIf="showAccountMenu">
+          <div class="dropdown-header">
+            <div class="user-avatar">{{ getUserInitial() }}</div>
+            <div class="user-info">
+              <p class="user-name">{{ currentUser?.username || 'User' }}</p>
+              <p class="user-email">{{ currentUser?.email || '' }}</p>
+              <span class="user-role">{{ currentUser?.role || 'customer' }}</span>
+            </div>
           </div>
           
-          <div class="dropdown-menu" [class.show]="isMenuOpen">
-            <div class="dropdown-header">
-              <p class="username">{{ currentUser.username }}</p>
-              <p class="email">{{ currentUser.email }}</p>
-            </div>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" (click)="navigateTo('/menu-upload')" *ngIf="currentUser.role === 'owner' || currentUser.role === 'admin'">
+          <div class="dropdown-divider"></div>
+          
+          <div class="dropdown-menu">
+            <a routerLink="/dashboard" class="dropdown-item" (click)="closeMenus()">
+              <span class="item-icon">🏠</span>
+              <span class="item-text">Dashboard</span>
+            </a>
+            <a routerLink="/my-reviews" class="dropdown-item" (click)="closeMenus()">
+              <span class="item-icon">📝</span>
+              <span class="item-text">My Reviews</span>
+            </a>
+            <a routerLink="/my-venues" class="dropdown-item" *ngIf="isOwner()" (click)="closeMenus()">
+              <span class="item-icon">🏢</span>
+              <span class="item-text">My Venues</span>
+            </a>
+            <a routerLink="/menu-upload" class="dropdown-item" *ngIf="isOwner()" (click)="closeMenus()">
               <span class="item-icon">📋</span>
-              Upload Menu
+              <span class="item-text">Upload Menu</span>
             </a>
-            <a class="dropdown-item" (click)="navigateTo('/my-venues')" *ngIf="currentUser.role === 'owner' || currentUser.role === 'admin'">
-              <span class="item-icon">🏪</span>
-              My Venues
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item logout" (click)="logout()">
+            <!--<a routerLink="/feed" class="dropdown-item" (click)="closeMenus()">
+              <span class="item-icon">📰</span>
+              <span class="item-text">Feed</span>
+            </a>-->
+            <button class="dropdown-item" type="button" (click)="logout()">
               <span class="item-icon">🚪</span>
-              Sign Out
-            </a>
+              <span class="item-text">Sign Out</span>
+            </button>
           </div>
         </div>
-      </ng-container>
-
-      <ng-template #loginButtons>
-        <button class="btn-outline" (click)="navigateTo('/login')">Login</button>
-        <button class="btn-primary" (click)="navigateTo('/register')">Sign Up</button>
-      </ng-template>
+      </div>
 
       <!-- Mobile Menu Toggle -->
-      <button class="mobile-menu-toggle" (click)="toggleMenu()">
-        <span class="hamburger" [class.open]="isMenuOpen"></span>
+      <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
+        <span class="hamburger" [class.open]="showMobileMenu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
       </button>
     </div>
   </div>
 
   <!-- Mobile Navigation Menu -->
-  <div class="mobile-nav" [class.show]="isMenuOpen">
-    <a routerLink="/home" (click)="toggleMenu()" class="mobile-nav-link">Home</a>
-    <a routerLink="/by-food-item" (click)="toggleMenu()" class="mobile-nav-link">By Food Item</a>
-    <a routerLink="/by-bar" (click)="toggleMenu()" class="mobile-nav-link">By Bar</a>
-    <a routerLink="/by-genre" (click)="toggleMenu()" class="mobile-nav-link">By Genre</a>
-    <a routerLink="/about" (click)="toggleMenu()" class="mobile-nav-link">About</a>
-    <a routerLink="/contact" (click)="toggleMenu()" class="mobile-nav-link">Contact</a>
-    
-    <ng-container *ngIf="currentUser">
-      <div class="mobile-nav-divider"></div>
-      <a routerLink="/create-post" (click)="toggleMenu()" class="mobile-nav-link highlight">Create Post</a>
-      <a routerLink="/menu-upload" (click)="toggleMenu()" class="mobile-nav-link" *ngIf="currentUser.role === 'owner' || currentUser.role === 'admin'">Upload Menu</a>
-      <a (click)="logout()" class="mobile-nav-link logout">Sign Out</a>
-    </ng-container>
+  <div class="mobile-nav" [class.show]="showMobileMenu">
+    <div class="mobile-nav-content">
+      <!-- User Info (if logged in) -->
+      <div class="mobile-user-section" *ngIf="authService.isAuthenticated()">
+        <div class="mobile-user-avatar">{{ getUserInitial() }}</div>
+        <div class="mobile-user-info">
+          <p class="mobile-user-name">{{ currentUser?.username || 'User' }}</p>
+          <p class="mobile-user-email">{{ currentUser?.email || '' }}</p>
+          <span class="mobile-user-role">{{ currentUser?.role || 'customer' }}</span>
+        </div>
+      </div>
+
+      <div class="mobile-divider" *ngIf="authService.isAuthenticated()"></div>
+
+      <!-- Navigation Links -->
+      <div class="mobile-nav-links">
+        <!-- Authenticated User Links -->
+        <a routerLink="/dashboard" class="mobile-nav-link" (click)="closeMenus()" *ngIf="authService.isAuthenticated()">
+          <span class="link-icon">🏠</span>
+          Dashboard
+        </a>
+        <a routerLink="/my-reviews" class="mobile-nav-link" (click)="closeMenus()" *ngIf="authService.isAuthenticated()">
+          <span class="link-icon">📝</span>
+          My Reviews
+        </a>
+        <a routerLink="/my-venues" class="mobile-nav-link" (click)="closeMenus()" *ngIf="isOwner()">
+          <span class="link-icon">🏢</span>
+          My Venues
+        </a>
+        <a routerLink="/menu-upload" class="mobile-nav-link" (click)="closeMenus()" *ngIf="isOwner()">
+          <span class="link-icon">📋</span>
+          Upload Menu
+        </a>
+
+        <!-- Common Links -->
+        <a routerLink="/by-bar" class="mobile-nav-link" routerLinkActive="active" (click)="closeMenus()">
+          <span class="link-icon">🏪</span>
+          Venues
+        </a>
+        <a routerLink="/by-food-item" class="mobile-nav-link" routerLinkActive="active" (click)="closeMenus()">
+          <span class="link-icon">🍽️</span>
+          Food Items
+        </a>
+        <a routerLink="/by-genre" class="mobile-nav-link" routerLinkActive="active" (click)="closeMenus()" *ngIf="authService.isAuthenticated()">
+          <span class="link-icon">🎭</span>
+          By Genre
+        </a>
+        <a routerLink="/feed" class="mobile-nav-link" routerLinkActive="active" (click)="closeMenus()" *ngIf="authService.isAuthenticated()">
+          <span class="link-icon">📰</span>
+          Reviews
+        </a>
+        <a routerLink="/about" class="mobile-nav-link" routerLinkActive="active" (click)="closeMenus()">
+          <span class="link-icon">ℹ️</span>
+          About
+        </a>
+      </div>
+
+      <div class="mobile-divider"></div>
+
+      <!-- Auth Actions -->
+      <div class="mobile-auth-actions">
+        <div *ngIf="!authService.isAuthenticated()">
+          <a routerLink="/login" class="mobile-btn-login" (click)="closeMenus()">Sign In</a>
+          <a routerLink="/register" class="mobile-btn-register" (click)="closeMenus()">Sign Up</a>
+        </div>
+        <button *ngIf="authService.isAuthenticated()" class="mobile-btn-logout" type="button" (click)="logout()">
+          <span class="link-icon">🚪</span>
+          Sign Out
+        </button>
+      </div>
+    </div>
   </div>
+
+  <!-- Overlay for mobile menu -->
+  <div class="mobile-overlay" *ngIf="showMobileMenu" (click)="closeMenus()"></div>
 </nav>

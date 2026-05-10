@@ -1,176 +1,228 @@
 @import '../../../../styles/variables';
 @import '../../../../styles/mixins';
 
+
 .post-card {
   @include card;
-  margin-bottom: $spacing-xl;
-  animation: fadeIn 0.5s ease-out;
+  padding: 0;
+  overflow: hidden;
   transition: all $transition-base;
+  border: 1px solid rgba($color-metallic-gold, 0.1);
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: $shadow-xl, $shadow-gold;
+    border-color: rgba($color-metallic-gold, 0.3);
+    box-shadow: $shadow-lg;
   }
 }
 
+// Images Section
+.post-images {
+  width: 100%;
+  background: $color-deep-navy;
+}
+
+.images-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+
+  &.single-image {
+    grid-template-columns: 1fr;
+  }
+
+  @include respond-to('mobile') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.post-image {
+  width: 100%;
+  height: 250px;
+  background: linear-gradient(135deg, $color-royal-blue, $color-deep-navy);
+  background-size: cover;
+  background-position: center;
+
+  @include respond-to('mobile') {
+    height: 200px;
+  }
+}
+
+.image-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: $spacing-sm $spacing-md;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  &.advertised {
+    background: rgba($color-soft-amber, 0.9);
+    color: $color-deep-navy;
+  }
+
+  &.served {
+    background: rgba($color-metallic-gold, 0.9);
+    color: $color-deep-navy;
+  }
+}
+
+// Post Header
 .post-header {
+  padding: $spacing-lg;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: $spacing-md;
+  align-items: flex-start;
+  gap: $spacing-md;
+  border-bottom: 1px solid rgba($color-metallic-gold, 0.1);
 }
 
 .user-info {
   display: flex;
-  align-items: center;
   gap: $spacing-md;
+  flex: 1;
 }
 
 .user-avatar {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: $radius-full;
-  overflow: hidden;
-  border: 2px solid $color-metallic-gold;
-  flex-shrink: 0;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-}
-
-.avatar-placeholder {
-  width: 100%;
-  height: 100%;
   @include gold-gradient;
   @include flex-center;
   color: $color-deep-navy;
   font-weight: 700;
   font-size: $font-size-lg;
+  flex-shrink: 0;
 }
 
 .user-details {
+  flex: 1;
+  min-width: 0;
+
   .username {
+    font-size: $font-size-base;
     font-weight: 600;
     color: $color-white;
-    margin: 0;
-    font-size: $font-size-base;
+    margin: 0 0 $spacing-xs 0;
   }
 
-  .post-time {
+  .post-date {
     font-size: $font-size-sm;
     color: $color-gray-medium;
     margin: 0;
   }
 }
 
-.delete-btn {
+.post-actions {
+  display: flex;
+  gap: $spacing-xs;
+  opacity: 0;
+  transition: opacity $transition-base;
+
+  .post-card:hover & {
+    opacity: 1;
+  }
+}
+
+.btn-edit-post,
+.btn-delete-post {
+  @include button-base;
   background: transparent;
   border: none;
-  cursor: pointer;
-  font-size: $font-size-xl;
-  padding: $spacing-sm;
-  border-radius: $radius-md;
+  padding: $spacing-xs;
+  font-size: $font-size-base;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-sm;
   transition: all $transition-base;
+}
+
+.btn-edit-post {
+  color: $color-soft-amber;
+
+  &:hover {
+    background: rgba($color-soft-amber, 0.2);
+  }
+}
+
+.btn-delete-post {
+  color: $color-error;
 
   &:hover {
     background: rgba($color-error, 0.2);
-    transform: scale(1.1);
-  }
-}
-
-.post-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $spacing-sm;
-  margin-bottom: $spacing-md;
-}
-
-.meta-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: $spacing-xs;
-  padding: $spacing-xs $spacing-md;
-  background: rgba($color-royal-blue, 0.3);
-  border-radius: $radius-full;
-  font-size: $font-size-sm;
-  color: $color-soft-amber;
-  border: 1px solid rgba($color-metallic-gold, 0.2);
-
-  .icon {
-    font-size: $font-size-base;
-  }
-}
-
-.post-image {
-  width: 100%;
-  max-height: 500px;
-  overflow: hidden;
-  border-radius: $radius-lg;
-  margin-bottom: $spacing-md;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform $transition-slow;
-  }
-
-  &:hover img {
-    transform: scale(1.05);
   }
 }
 
 .post-rating {
   display: flex;
   align-items: center;
-  gap: $spacing-md;
-  margin-bottom: $spacing-md;
-}
+  gap: $spacing-sm;
+  background: rgba($color-metallic-gold, 0.1);
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-full;
 
-.stars {
-  display: flex;
-  gap: $spacing-xs;
-}
+  .stars {
+    display: flex;
+    gap: 2px;
+  }
 
-.star {
-  font-size: $font-size-xl;
-  filter: grayscale(100%);
-  opacity: 0.3;
-  transition: all $transition-base;
+  .star {
+    font-size: $font-size-sm;
+    filter: grayscale(100%);
+    opacity: 0.3;
 
-  &.filled {
-    filter: grayscale(0%);
-    opacity: 1;
+    &.filled {
+      filter: grayscale(0%);
+      opacity: 1;
+    }
+  }
+
+  .rating-value {
+    font-weight: 700;
+    color: $color-metallic-gold;
+    font-size: $font-size-sm;
   }
 }
 
-.rating-value {
-  font-weight: 700;
-  color: $color-metallic-gold;
-  font-size: $font-size-lg;
-}
+// Post Content
+.post-content {
+  padding: $spacing-lg;
 
-.post-caption {
-  p {
+  .post-title {
+    font-size: $font-size-lg;
+    font-weight: 700;
+    color: $color-white;
+    margin: 0 0 $spacing-sm 0;
+  }
+
+  .post-text {
     color: $color-gray-light;
     line-height: 1.6;
     margin: 0;
-    font-size: $font-size-base;
   }
 }
 
+// Menu Item Tag
 .menu-item-tag {
   display: flex;
   align-items: center;
   gap: $spacing-sm;
-  padding: $spacing-md;
+  padding: $spacing-md $spacing-lg;
   @include glassmorphism(0.05);
-  border-radius: $radius-md;
-  border: 1px solid rgba($color-soft-amber, 0.3);
-  margin-bottom: $spacing-md;
+  border-top: 1px solid rgba($color-soft-amber, 0.2);
+  border-bottom: 1px solid rgba($color-soft-amber, 0.2);
+  margin: 0;
 
   .item-icon {
     font-size: $font-size-xl;
@@ -208,5 +260,31 @@
     color: $color-metallic-gold;
     font-weight: 600;
     font-size: $font-size-sm;
+  }
+}
+
+// Post Footer
+.post-footer {
+  padding: $spacing-md $spacing-lg;
+  background: rgba($color-royal-blue, 0.1);
+}
+
+.venue-tag {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-size: $font-size-sm;
+
+  .venue-icon {
+    font-size: $font-size-base;
+  }
+
+  .venue-name {
+    color: $color-white;
+    font-weight: 600;
+  }
+
+  .venue-location {
+    color: $color-gray-medium;
   }
 }

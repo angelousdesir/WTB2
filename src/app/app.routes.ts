@@ -89,6 +89,11 @@ export const routes: Routes = [
   canActivate: [authGuard]
   },
   { 
+  path: 'my-reviews', 
+  loadComponent: () => import('./features/my-reviews/my-reviews.component').then(m => m.MyReviewsComponent),
+  canActivate: [authGuard]
+  },
+  { 
   path: 'menu-item/:id', 
   loadComponent: () => import('./features/menu-item-detail/menu-item-detail.component').then(m => m.MenuItemDetailComponent)
   },

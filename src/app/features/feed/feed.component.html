@@ -1,45 +1,50 @@
 <div class="feed-container">
-  <div class="feed-content">
+  <div class="content-wrapper">
     <!-- Header -->
     <div class="feed-header">
-      <h1>Latest Reviews</h1>
-      <p>Discover what the community is loving</p>
+      <h1>Reviews</h1>
+      <button class="btn-create-post" routerLink="/create-post">
+        <span class="icon">+</span>
+        Create a Review
+      </button>
     </div>
 
-    <!-- Posts Grid -->
-    <div class="posts-wrapper">
-      <div class="posts-main">
-        <div class="posts-list">
+    <div class="feed-content">
+      <!-- Posts -->
+      <div class="posts-section">
+        <div *ngIf="loading" class="loading">
+          <div class="spinner"></div>
+          <p>Loading feed...</p>
+        </div>
+
+        <div *ngIf="!loading && posts.length === 0" class="empty-state">
+          <div class="empty-icon">📝</div>
+          <h2>No posts yet</h2>
+          <p>Be the first to share your food and drink experience!</p>
+          <button class="btn-primary" routerLink="/create-post">Create First Post</button>
+        </div>
+
+        <div class="posts-list" *ngIf="!loading && posts.length > 0">
           <app-post-card 
             *ngFor="let post of posts" 
             [post]="post"
-            [showDelete]="false"
-            (deletePost)="onDeletePost($event)">
+            (edit)="onEditPost($event)"
+            (delete)="onDeletePost($event)">
           </app-post-card>
+        </div>
 
-          <!-- Loading indicator -->
-          <div *ngIf="loading" class="loading-indicator">
-            <div class="spinner"></div>
-            <p>Loading more reviews...</p>
-          </div>
+        <div *ngIf="loadingMore" class="loading-more">
+          <div class="spinner"></div>
+          <p>Loading more posts...</p>
+        </div>
 
-          <!-- No more posts -->
-          <div *ngIf="!hasMore && posts.length > 0" class="end-message">
-            <p>🎉 You've reached the end!</p>
-          </div>
-
-          <!-- Empty state -->
-          <div *ngIf="!loading && posts.length === 0" class="empty-state">
-            <div class="empty-icon">📭</div>
-            <h3>No reviews yet</h3>
-            <p>Be the first to share your dining experience!</p>
-            <button class="btn-primary" routerLink="/create-post">Create First Post</button>
-          </div>
+        <div *ngIf="!hasMore && posts.length > 0" class="end-of-feed">
+          <p>You've reached the end!</p>
         </div>
       </div>
 
       <!-- Sidebar -->
-      <aside class="feed-sidebar">
+      <aside class="sidebar">
         <app-top-items-sidebar></app-top-items-sidebar>
       </aside>
     </div>
