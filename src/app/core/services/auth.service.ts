@@ -29,6 +29,8 @@ export class AuthService {
         await this.loadUserProfile(session.user.id);
       }
 
+      
+
       // Listen to auth state changes
       this.supabaseService.client.auth.onAuthStateChange(async (event, session) => {
         console.log('Auth state changed:', event, session?.user?.email);
@@ -303,6 +305,9 @@ async signOut(): Promise<void> {
   get currentUserValue(): User | null {
     return this.currentUserSubject.value;
   }
+
+
+  
 
   /**
    * Check if user is authenticated

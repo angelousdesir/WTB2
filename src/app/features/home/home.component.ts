@@ -6,6 +6,7 @@ import { VenueService } from '../../core/services/venue.service';
 import { Post } from '../../core/models/post.model';
 import { Venue } from '../../core/models/venue.model';
 import { PostCardComponent } from '../../shared/components/post-card/post-card.component';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -22,7 +23,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private postService: PostService,
     private venueService: VenueService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -40,11 +42,19 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  navigateToDashboard(): void {
+    this.router.navigate(['/dashboard']);
+  }
+
   navigateToFeed(): void {
     this.router.navigate(['/feed']);
   }
 
   navigateToVenue(venueId: string): void {
     this.router.navigate(['/by-bar', venueId]);
+  }
+
+  navigateToRegister(): void {
+    this.router.navigate(['/register']);
   }
 }

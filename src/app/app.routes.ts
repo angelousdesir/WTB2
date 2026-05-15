@@ -97,5 +97,20 @@ export const routes: Routes = [
   path: 'menu-item/:id', 
   loadComponent: () => import('./features/menu-item-detail/menu-item-detail.component').then(m => m.MenuItemDetailComponent)
   },
+  { 
+  path: 'upgrade', 
+  loadComponent: () => import('./features/upgrade/upgrade.component').then(m => m.UpgradeComponent),
+  canActivate: [authGuard]
+  },
+  { 
+  path: 'upgrade-success', 
+  loadComponent: () => import('./features/upgrade-success/upgrade-success.component').then(m => m.UpgradeSuccessComponent),
+  canActivate: [authGuard]
+  },
+  { 
+  path: 'upgrade-canceled', 
+  loadComponent: () => import('./features/upgrade-canceled/upgrade-canceled.component').then(m => m.UpgradeCanceledComponent),
+  canActivate: [authGuard]
+  },
   { path: '**', redirectTo: 'home' }
 ];

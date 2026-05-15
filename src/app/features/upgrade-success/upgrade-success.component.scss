@@ -1,0 +1,242 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.success-container {
+  min-height: 100vh;
+  padding: $spacing-xl;
+  background-color: $color-background-dark;
+  @include flex-center;
+}
+
+.content-wrapper {
+  width: 100%;
+  max-width: 800px;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.success-card {
+  @include card;
+  padding: $spacing-2xl * 2;
+  text-align: center;
+
+  @include respond-to('mobile') {
+    padding: $spacing-2xl;
+  }
+}
+
+.success-icon-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto $spacing-xl;
+}
+
+.success-icon {
+  font-size: 6rem;
+  animation: bounceIn 0.6s ease-out;
+}
+
+.success-rings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  border: 3px solid $color-success;
+  border-radius: 50%;
+  opacity: 0;
+  animation: ringExpand 2s ease-out infinite;
+
+  &:nth-child(2) {
+    animation-delay: 0.5s;
+  }
+
+  &:nth-child(3) {
+    animation-delay: 1s;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes ringExpand {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+h1 {
+  font-size: $font-size-3xl;
+  font-weight: 700;
+  color: $color-white;
+  margin: 0 0 $spacing-md 0;
+
+  @include respond-to('mobile') {
+    font-size: $font-size-2xl;
+  }
+}
+
+.success-message {
+  font-size: $font-size-lg;
+  color: $color-gray-light;
+  margin: 0 0 $spacing-2xl 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.features-unlocked {
+  margin-bottom: $spacing-2xl;
+  padding: $spacing-xl;
+  @include glassmorphism(0.05);
+  border-radius: $radius-lg;
+  border: 2px solid rgba($color-success, 0.3);
+
+  h3 {
+    font-size: $font-size-xl;
+    color: $color-white;
+    margin: 0 0 $spacing-lg 0;
+  }
+}
+
+.features-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+
+  @include respond-to('mobile') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  text-align: left;
+
+  .feature-icon {
+    color: $color-success;
+    font-weight: 700;
+    font-size: $font-size-lg;
+  }
+
+  .feature-text {
+    color: $color-gray-light;
+    font-size: $font-size-base;
+  }
+}
+
+.next-steps {
+  margin-bottom: $spacing-2xl;
+
+  h3 {
+    font-size: $font-size-xl;
+    color: $color-white;
+    margin: 0 0 $spacing-lg 0;
+  }
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-md;
+
+  @include respond-to('mobile') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.step-card {
+  @include card;
+  padding: $spacing-lg;
+  text-decoration: none;
+  transition: all $transition-base;
+  border: 2px solid rgba($color-metallic-gold, 0.2);
+
+  &:hover {
+    transform: translateY(-8px);
+    border-color: $color-metallic-gold;
+    box-shadow: $shadow-xl;
+  }
+
+  .step-icon {
+    font-size: 2.5rem;
+    margin-bottom: $spacing-sm;
+  }
+
+  h4 {
+    font-size: $font-size-base;
+    font-weight: 700;
+    color: $color-white;
+    margin: 0 0 $spacing-xs 0;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-gray-medium;
+    margin: 0;
+  }
+}
+
+.redirect-notice {
+  padding-top: $spacing-xl;
+  border-top: 1px solid rgba($color-metallic-gold, 0.2);
+
+  p {
+    color: $color-gray-medium;
+    margin: 0 0 $spacing-lg 0;
+
+    strong {
+      color: $color-metallic-gold;
+      font-size: $font-size-xl;
+    }
+  }
+}
+
+.btn-dashboard {
+  @include button-base;
+  @include gold-gradient;
+  color: $color-deep-navy;
+  padding: $spacing-md $spacing-2xl;
+  font-weight: 700;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-gold;
+  }
+}

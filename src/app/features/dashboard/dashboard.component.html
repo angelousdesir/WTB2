@@ -143,6 +143,29 @@
           </div>
         </div>
       </div>
+
+      <!-- Upgrade to Owner Section (for customers only) -->
+<div class="section" *ngIf="!isOwner">
+  <div class="upgrade-banner">
+    <div class="upgrade-content">
+      <h2>⭐ Unlock Owner Features</h2>
+      <p>Manage your venues, upload menus, and grow your business on FoodBar</p>
+      <ul class="upgrade-features">
+        <li>✓ Add unlimited venues</li>
+        <li>✓ Upload menus with OCR</li>
+        <li>✓ Track analytics</li>
+        <li>✓ Respond to reviews</li>
+      </ul>
+      <button class="btn-upgrade" routerLink="/upgrade">
+        Upgrade Now →
+      </button>
+    </div>
+    <div class="upgrade-visual">
+      <div class="upgrade-icon">🏆</div>
+    </div>
+  </div>
+</div>
+
     </div>
   </div>
 </div>

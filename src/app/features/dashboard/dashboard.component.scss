@@ -279,3 +279,64 @@
     }
   }
 }
+
+.upgrade-banner {
+  @include card;
+  padding: $spacing-2xl;
+  display: flex;
+  gap: $spacing-xl;
+  align-items: center;
+  background: linear-gradient(135deg, rgba($color-royal-blue, 0.3), rgba($color-deep-navy, 0.3));
+  border: 2px solid rgba($color-metallic-gold, 0.5);
+
+  @include respond-to('mobile') {
+    flex-direction: column;
+  }
+
+  .upgrade-content {
+    flex: 1;
+
+    h2 {
+      font-size: $font-size-2xl;
+      color: $color-white;
+      margin: 0 0 $spacing-md 0;
+    }
+
+    p {
+      color: $color-gray-light;
+      margin: 0 0 $spacing-lg 0;
+    }
+
+    .upgrade-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 $spacing-lg 0;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: $spacing-sm;
+
+      li {
+        color: $color-metallic-gold;
+        font-weight: 600;
+      }
+    }
+
+    .btn-upgrade {
+      @include button-base;
+      @include gold-gradient;
+      color: $color-deep-navy;
+      padding: $spacing-md $spacing-xl;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: $shadow-gold;
+      }
+    }
+  }
+
+  .upgrade-visual {
+    .upgrade-icon {
+      font-size: 8rem;
+    }
+  }
+}

@@ -76,6 +76,10 @@
               <span class="item-icon">📋</span>
               <span class="item-text">Upload Menu</span>
             </a>
+            <a routerLink="/upgrade" class="upgrade-btn" *ngIf="!authService.isOwner()">
+              <span class="icon">⭐</span>
+                <span class="item-text">Upgrade to Owner</span>
+            </a>
             <!--<a routerLink="/feed" class="dropdown-item" (click)="closeMenus()">
               <span class="item-icon">📰</span>
               <span class="item-text">Feed</span>

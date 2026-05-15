@@ -1,0 +1,69 @@
+<div class="success-container">
+  <div class="content-wrapper">
+    <div class="success-card">
+      <div class="success-icon-wrapper">
+        <div class="success-icon">✅</div>
+        <div class="success-rings">
+          <div class="ring"></div>
+          <div class="ring"></div>
+          <div class="ring"></div>
+        </div>
+      </div>
+
+      <h1>Welcome to FoodBar Owner!</h1>
+      <p class="success-message">
+        Your subscription has been activated successfully. You now have access to all owner features!
+      </p>
+
+      <div class="features-unlocked">
+        <h3>🎉 Features Unlocked:</h3>
+        <div class="features-list">
+          <div class="feature-item">
+            <span class="feature-icon">✓</span>
+            <span class="feature-text">Add unlimited venues</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">✓</span>
+            <span class="feature-text">Upload menus with OCR</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">✓</span>
+            <span class="feature-text">Manage all menu items</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">✓</span>
+            <span class="feature-text">Analytics dashboard</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="next-steps">
+        <h3>🚀 Get Started:</h3>
+        <div class="steps-grid">
+          <a routerLink="/add-venue" class="step-card">
+            <div class="step-icon">🏢</div>
+            <h4>Add Your Venue</h4>
+            <p>Create your first restaurant or bar</p>
+          </a>
+          <a routerLink="/menu-upload" class="step-card">
+            <div class="step-icon">📋</div>
+            <h4>Upload Menu</h4>
+            <p>Add your menu items with photos</p>
+          </a>
+          <a routerLink="/dashboard" class="step-card">
+            <div class="step-icon">📊</div>
+            <h4>View Dashboard</h4>
+            <p>Track your venue performance</p>
+          </a>
+        </div>
+      </div>
+
+      <div class="redirect-notice">
+        <p>Redirecting to dashboard in <strong>{{ countdown }}</strong> seconds...</p>
+        <button class="btn-dashboard" (click)="navigateToDashboard()">
+          Go to Dashboard Now
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

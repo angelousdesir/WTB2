@@ -1,0 +1,96 @@
+<div class="upgrade-container">
+  <div class="content-wrapper">
+    <!-- Header -->
+    <div class="upgrade-header">
+      <h1>Upgrade to Venue Owner</h1>
+      <p>Unlock powerful tools to manage your restaurant or bar on FoodBar</p>
+    </div>
+
+    <!-- Current Subscription Status -->
+    <div class="subscription-status" *ngIf="hasActiveSubscription">
+      <div class="status-card active">
+        <div class="status-icon">✅</div>
+        <div class="status-info">
+          <h3>Active Subscription</h3>
+          <p>You have an active owner subscription</p>
+          <p class="expiry" *ngIf="subscription?.current_period_end">
+            Renews: {{ subscription.current_period_end | date:'mediumDate' }}
+          </p>
+        </div>
+        <button class="btn-manage" (click)="manageSubscription()" [disabled]="loading">
+          Manage Subscription
+        </button>
+      </div>
+    </div>
+
+    <!-- Pricing Plans -->
+    <div class="pricing-section" *ngIf="!hasActiveSubscription">
+      <h2>Choose Your Plan</h2>
+      <div class="plans-grid">
+        <div *ngFor="let plan of plans" class="plan-card" [class.featured]="plan.badge">
+          <div class="plan-badge" *ngIf="plan.badge">{{ plan.badge }}</div>
+          
+          <div class="plan-header">
+            <h3>{{ plan.name }}</h3>
+            <div class="plan-price">
+              <span class="currency">$</span>
+              <span class="amount">{{ plan.price }}</span>
+              <span class="interval">/ {{ plan.interval }}</span>
+            </div>
+          </div>
+
+          <div class="plan-features">
+            <div class="feature" *ngFor="let feature of plan.features">
+              <span class="feature-icon">✓</span>
+              <span class="feature-text">{{ feature }}</span>
+            </div>
+          </div>
+
+          <button 
+            class="btn-upgrade" 
+            
+            [disabled]="loading">
+            <span *ngIf="!loading">Choose {{ plan.name }}</span>
+            <div *ngIf="loading" class="btn-loading">
+              <div class="spinner"></div>
+              <span>Processing...</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div class="guarantee-section">
+        <p>🔒 Secure payment powered by Stripe</p>
+        <p>💯 30-day money-back guarantee</p>
+        <p>🚀 Cancel anytime, no questions asked</p>
+      </div>
+    </div>
+
+    <!-- Benefits Section -->
+    <div class="benefits-section">
+      <h2>Why Upgrade?</h2>
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <div class="benefit-icon">🏢</div>
+          <h3>Manage Venues</h3>
+          <p>Add and manage unlimited restaurant and bar locations</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">📋</div>
+          <h3>Smart Menus</h3>
+          <p>Upload menus with automatic OCR text extraction</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">📊</div>
+          <h3>Analytics</h3>
+          <p>Track reviews, ratings, and customer engagement</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">💬</div>
+          <h3>Engage Customers</h3>
+          <p>Respond to reviews and build your reputation</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

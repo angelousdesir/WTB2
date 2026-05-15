@@ -1,0 +1,45 @@
+<div class="canceled-container">
+  <div class="content-wrapper">
+    <div class="canceled-card">
+      <div class="canceled-icon">😔</div>
+      
+      <h1>Upgrade Canceled</h1>
+      <p class="canceled-message">
+        Your upgrade was canceled. No charges were made to your account.
+      </p>
+
+      <div class="reasons-section">
+        <h3>What would you like to do?</h3>
+        <div class="reasons-grid">
+          <a *ngFor="let reason of reasons" [routerLink]="reason.link" class="reason-card">
+            <div class="reason-icon">{{ reason.icon }}</div>
+            <h4>{{ reason.title }}</h4>
+            <p>{{ reason.description }}</p>
+            <span class="reason-action">{{ reason.action }} →</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="cta-section">
+        <p>Changed your mind?</p>
+        <div class="cta-buttons">
+          <a routerLink="/upgrade" class="btn-retry">
+            Try Again
+          </a>
+          <a routerLink="/dashboard" class="btn-dashboard">
+            Back to Dashboard
+          </a>
+        </div>
+      </div>
+
+      <div class="help-section">
+        <p class="help-text">
+          <strong>Need help?</strong> We're here for you.
+        </p>
+        <p class="help-text">
+          Email us at <a href="mailto:support@foodbar.com" class="help-link">support@foodbar.com</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
